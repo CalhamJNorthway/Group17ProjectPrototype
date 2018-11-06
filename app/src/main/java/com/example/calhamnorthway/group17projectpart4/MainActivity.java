@@ -17,9 +17,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Create user
         UserVO calham = new UserVO("Calham Northway", 21, Gender.Male, "Sexxxier than the Dos Equis guy.", null, null);
-
+        UserVO michael = new UserVO("Michael R", 22, Gender.Male, "Hello world!", null, null);
         //Add user to arrayList
         allUsers.add(calham);
+        allUsers.add(michael);
 
 
     }
