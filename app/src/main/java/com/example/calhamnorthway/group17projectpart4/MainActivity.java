@@ -17,6 +17,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Create user
         UserVO calham = new UserVO("Calham Northway", 21, Gender.Male, "Sexxxier than the Dos Equis guy.", null, null);
+<<<<<<< HEAD
+        UserVO michael = new UserVO("Michael R", 22, Gender.Male, "Hello world!", null, null);
+        //Add user to arrayList
+        allUsers.add(calham);
+        allUsers.add(michael);
+=======
         UserVO brianna = new UserVO("Brianna Marshinew", 21, Gender.Female, "I like long walks on the beach.", null, null);
         UserVO michael = new UserVO("Michael CY", 22, Gender.Male, "We can hang.", null, null);
         UserVO chris = new UserVO("Chris Beda", 26, Gender.Male, "Banned from Christian Mingle", null, null);
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         allUsers.add(chris);
         allUsers.add(michael);
 
+>>>>>>> 51cfc6ed51899842ac88743377327b1d76b1155e
 
 
     }
