@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/action_meetPeopleFragment">
+
+    <fragment
+        android:id="@+id/action_messagingMatchesFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.MessagingMatchesFragment"
+        android:label="@string/messages_and_matches"
+        tools:layout="@layout/fragment_messaging_matches" />
+    <fragment
+        android:id="@+id/action_meetPeopleFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.MeetPeopleFragment"
+        android:label="@string/meet_new_people"
+        tools:layout="@layout/fragment_meet_people" />
+    <fragment
+        android:id="@+id/profileDetailsFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.ProfileDetailsFragment"
+        android:label="fragment_profile_details"
+        tools:layout="@layout/fragment_profile_details" />
+</navigation>
