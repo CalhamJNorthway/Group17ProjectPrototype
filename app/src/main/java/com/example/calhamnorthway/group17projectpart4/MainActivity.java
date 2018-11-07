@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         //Sets up the AppBar Configuration for the Navigation UI. Sets the meetPeopleFragment and
         // MessagingMatchesFragment as top level in destinations
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.action_meetPeopleFragment, R.id.action_messagingMatchesFragment)
+                .Builder(R.id.meetPeopleFragment, R.id.messagingMatchesFragment)
                 .setDrawerLayout(drawerLayout)
                 .build();
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
@@ -66,7 +65,8 @@ public class MainActivity extends AppCompatActivity
             public void onNavigated(@NonNull NavController controller, @NonNull NavDestination destination) {
 
                 Log.d(TAG, "onNavigated: " + destination.getId());
-                if(controller.getGraph().getStartDestination() == destination.getId()) {
+                if(R.id.meetPeopleFragment == destination.getId()
+                        || R.id.messagingMatchesFragment == destination.getId()) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 } else {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -97,6 +97,11 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onGoToProfile() {
+        navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
     }
 
     @Override

@@ -3,18 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/action_meetPeopleFragment">
+    app:startDestination="@id/meetPeopleFragment">
 
     <fragment
-        android:id="@+id/action_messagingMatchesFragment"
+        android:id="@+id/messagingMatchesFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.MessagingMatchesFragment"
         android:label="@string/messages_and_matches"
         tools:layout="@layout/fragment_messaging_matches" />
     <fragment
-        android:id="@+id/action_meetPeopleFragment"
+        android:id="@+id/meetPeopleFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.MeetPeopleFragment"
         android:label="@string/meet_new_people"
-        tools:layout="@layout/fragment_meet_people" />
+        tools:layout="@layout/fragment_meet_people" >
+        <action
+            android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
+            app:destination="@id/profileDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileDetailsFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.ProfileDetailsFragment"
