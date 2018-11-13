@@ -11,6 +11,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.example.calhamnorthway.group17projectpart4.data.Gender;
+import com.example.calhamnorthway.group17projectpart4.data.UserVO;
+import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
+
 import java.util.ArrayList;
 
 import androidx.navigation.NavController;

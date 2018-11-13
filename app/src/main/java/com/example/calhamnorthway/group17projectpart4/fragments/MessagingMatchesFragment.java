@@ -1,4 +1,4 @@
-package com.example.calhamnorthway.group17projectpart4;
+package com.example.calhamnorthway.group17projectpart4.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,18 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.calhamnorthway.group17projectpart4.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProfileDetailsFragment.OnFragmentInteractionListener} interface
+ * {@link MessagingMatchesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ProfileDetailsFragment extends Fragment {
+public class MessagingMatchesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ProfileDetailsFragment() {
+    public MessagingMatchesFragment() {
         // Required empty public constructor
     }
 
@@ -28,7 +30,7 @@ public class ProfileDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_details, container, false);
+        return inflater.inflate(R.layout.fragment_messaging_matches, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

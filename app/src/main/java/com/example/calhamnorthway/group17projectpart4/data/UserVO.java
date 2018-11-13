@@ -1,4 +1,4 @@
-package com.example.calhamnorthway.group17projectpart4;
+package com.example.calhamnorthway.group17projectpart4.data;
 
 public class UserVO {
     private String name;
