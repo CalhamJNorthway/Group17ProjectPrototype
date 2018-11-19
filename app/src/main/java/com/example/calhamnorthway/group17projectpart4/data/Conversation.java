@@ -3,17 +3,17 @@ package com.example.calhamnorthway.group17projectpart4.data;
 import java.util.ArrayList;
 
 public class Conversation {
-    private UserVO user;
+    private Person user;
     private Message lastMessage;
     private ArrayList<Message> messages;
 
-    public Conversation(UserVO user, Message lastMessage, ArrayList<Message> messages) {
+    public Conversation(Person user, Message lastMessage, ArrayList<Message> messages) {
         this.user = user;
         this.lastMessage = lastMessage;
         this.messages = messages;
     }
 
-    public UserVO getUser() {
+    public Person getPerson() {
         return user;
     }
 

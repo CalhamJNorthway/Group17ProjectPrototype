@@ -3,17 +3,17 @@ package com.example.calhamnorthway.group17projectpart4.data;
 import java.util.Date;
 
 public class Message {
-    private UserVO user;
+    private User user;
     private Date timestamp;
     private String text;
 
-    public Message(UserVO user, Date timestamp, String text) {
+    public Message(User user, Date timestamp, String text) {
         this.user = user;
         this.timestamp = timestamp;
         this.text = text;
     }
 
-    public UserVO getUser() {
+    public User getUser() {
         return user;
     }
 
