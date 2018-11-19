@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 
@@ -56,7 +57,7 @@ public class ConversationsListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            ArrayList<Conversation> conversations = new ArrayList<>();
+            ArrayList<Conversation> conversations = ((MainActivity) getActivity()).getMainUser().getConversations();
             recyclerView.setAdapter(new ConversationsAdapter(conversations, listener));
         }
         return view;
