@@ -1,6 +1,7 @@
 package com.example.calhamnorthway.group17projectpart4.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Conversation {
     private Person user;
@@ -11,6 +12,13 @@ public class Conversation {
         this.user = user;
         this.lastMessage = lastMessage;
         this.messages = messages;
+    }
+
+    public Conversation(Person  user, Message... messages){
+        this.user = user;
+        this.lastMessage = messages[messages.length - 1];
+        this.messages = new ArrayList<>();
+        Collections.addAll(this.messages, messages);
     }
 
     public Person getPerson() {

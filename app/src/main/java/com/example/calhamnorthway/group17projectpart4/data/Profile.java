@@ -1,15 +1,17 @@
 package com.example.calhamnorthway.group17projectpart4.data;
 
+import com.example.calhamnorthway.group17projectpart4.R;
+
 public class Profile {
     private String description;
     private String job;
-    private String martialStatus;
+    private RelationshipStatus relationshipStatus;
     private int[] pictureIds;
 
     private Profile(Builder builder) {
         description = builder.description;
         job = builder.job;
-        martialStatus = builder.martialStatus;
+        relationshipStatus = builder.relationshipStatus;
         pictureIds = builder.pictureIds;
     }
 
@@ -25,8 +27,8 @@ public class Profile {
         return job;
     }
 
-    public String getMartialStatus() {
-        return martialStatus;
+    public RelationshipStatus getRelationshipStatus() {
+        return relationshipStatus;
     }
 
     public int[] getPictureIds() {
@@ -34,10 +36,10 @@ public class Profile {
     }
 
     public static final class Builder {
-        private String description;
-        private String job;
-        private String martialStatus;
-        private int[] pictureIds;
+        private String description ="";
+        private String job = "";
+        private RelationshipStatus relationshipStatus = RelationshipStatus.Single;
+        private int[] pictureIds = new int[0];
 
         private Builder() {
         }
@@ -52,8 +54,8 @@ public class Profile {
             return this;
         }
 
-        public Builder setMartialStatus(String val) {
-            martialStatus = val;
+        public Builder setRelationshipStatus1(RelationshipStatus val) {
+            relationshipStatus = val;
             return this;
         }
 

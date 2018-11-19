@@ -16,13 +16,19 @@ import android.view.View;
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Gender;
 import com.example.calhamnorthway.group17projectpart4.data.Match;
-import com.example.calhamnorthway.group17projectpart4.data.UserVO;
+import com.example.calhamnorthway.group17projectpart4.data.Message;
+import com.example.calhamnorthway.group17projectpart4.data.Person;
+import com.example.calhamnorthway.group17projectpart4.data.Profile;
+import com.example.calhamnorthway.group17projectpart4.data.User;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -43,6 +49,10 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
+
+    private ArrayList<Person> peopleToMeet;
+
+    private User mainUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,20 +101,63 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        //Instantiate User Array for app
-        ArrayList<UserVO> allUsers = new ArrayList<>();
+        mainUser = new User("Main User", 20, Gender.Male,
+                Profile.newBuilder()
+                        .withPictureIds(R.drawable.img_mainuser)
+                        .build());
 
-        //Create user
-        UserVO calham = new UserVO("Calham Northway", 21, Gender.Male, "Sexxxier than the Dos Equis guy.", null, null);
-        UserVO brianna = new UserVO("Brianna Marshinew", 21, Gender.Female, "I like long walks on the beach.", null, null);
-        UserVO michael = new UserVO("Michael CY", 22, Gender.Male, "We can hang.", null, null);
-        UserVO chris = new UserVO("Chris Beda", 26, Gender.Male, "Banned from Christian Mingle", null, null);
+        //Set up Matches
+        ArrayList<Match> matches = new ArrayList<>();
 
-        //Add user to arrayList
-        allUsers.add(calham);
-        allUsers.add(brianna);
-        allUsers.add(chris);
-        allUsers.add(michael);
+        long hour = 1000 * 60 * 60;
+
+        Date current = Calendar.getInstance().getTime();
+        Date temp = new Date(current.getTime() - (hour * 461));
+        matches.add(new Match(Person.people.get(0), temp));
+
+        temp = new Date(current.getTime() - (hour * 52));
+        matches.add(new Match(Person.people.get(3), temp));
+
+        temp = new Date(current.getTime() - (hour * 2));
+        matches.add(new Match(Person.people.get(6), temp));
+
+        temp = new Date(current.getTime() - (hour * 216));
+        matches.add(new Match(Person.people.get(9), temp));
+
+        mainUser.setMatches(matches);
+
+        //Set up people to meet
+        peopleToMeet = new ArrayList<>();
+        peopleToMeet.add(Person.people.get(1));
+        peopleToMeet.add(Person.people.get(2));
+        peopleToMeet.add(Person.people.get(4));
+        peopleToMeet.add(Person.people.get(5));
+        peopleToMeet.add(Person.people.get(7));
+        peopleToMeet.add(Person.people.get(8));
+        peopleToMeet.add(Person.people.get(10));
+
+        //Set up Conversations
+        ArrayList<Conversation> conversations = new ArrayList<>();
+
+        Message message1 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour + 10000)),
+                "Hi Cutie");
+        Message message2 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour)),
+                "This is a simple message for a simple person like you");
+        Message message3 = new Message(mainUser, new Date(current.getTime()  - (hour - (1000 * 60 * 12))),
+                "Thank you for the dms");
+        Message message4 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour - (1000 * 60 * 15))),
+                "Your welcome hot stuff");
+
+        conversations.add(new Conversation(Person.people.get(0), message1, message2, message3, message4));
+
+        message1 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour)),
+                "Whats cooking good looking");
+        message2 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour - 10000)),
+                "I rarely say this to anyone but you are one sexy person");
+
+        conversations.add(new Conversation(Person.people.get(6), message1, message2));
+
+        mainUser.setConversations(conversations);
     }
 
     @Override
@@ -128,6 +181,10 @@ public class MainActivity extends AppCompatActivity
         return tabLayout;
     }
 
+    public User getMainUser(){
+        return mainUser;
+    }
+
     @Override
     public void onGoToProfile() {
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
@@ -145,6 +202,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Conversation item) {
-
+        Log.d(TAG, "onListFragmentInteraction: Conversation " + item);
     }
 }
