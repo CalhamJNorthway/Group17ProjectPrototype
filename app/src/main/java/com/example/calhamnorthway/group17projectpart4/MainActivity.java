@@ -4,17 +4,23 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
+import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Gender;
+import com.example.calhamnorthway.group17projectpart4.data.Match;
 import com.example.calhamnorthway.group17projectpart4.data.UserVO;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
 import java.util.ArrayList;
 
@@ -26,13 +32,17 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity
         implements MeetPeopleFragment.OnFragmentInteractionListener,
-        MessagingMatchesFragment.OnFragmentInteractionListener {
+        MessagingMatchesFragment.OnFragmentInteractionListener,
+        ConversationsListFragment.OnListFragmentInteractionListener,
+        MatchesListFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
     public NavController navController;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +56,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tabLayout = findViewById(R.id.tabs);
+        showTabs(false);
 
         //Sets up the drawer layout and navigation view
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -56,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         //Sets up the AppBar Configuration for the Navigation UI. Sets the meetPeopleFragment and
         // MessagingMatchesFragment as top level in destinations
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
+        appBarConfiguration = new AppBarConfiguration
                 .Builder(R.id.meetPeopleFragment, R.id.messagingMatchesFragment)
                 .setDrawerLayout(drawerLayout)
                 .build();
@@ -104,6 +116,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void showTabs(boolean show) {
+        if(show) {
+            tabLayout.setVisibility(View.VISIBLE);
+        } else {
+            tabLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
     @Override
     public void onGoToProfile() {
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
@@ -111,6 +135,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(Match item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(Conversation item) {
 
     }
 }

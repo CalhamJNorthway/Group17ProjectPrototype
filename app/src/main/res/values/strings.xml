@@ -3,6 +3,9 @@
     <string name="meet_new_people">Meet New People</string>
     <string name="messages_and_matches">Messages and Matches</string>
 
+    <string name="tab_label_matches">Matches</string>
+    <string name="tab_label_messaging">Messages</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
