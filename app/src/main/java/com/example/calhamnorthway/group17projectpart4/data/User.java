@@ -22,10 +22,4 @@ public class User {
     public Profile getProfile() {
         return profile;
     }
-
-//    public final static ArrayList<User> dummyItems = new ArrayList<>();
-//
-//    static {
-//        dummyItems.add(new User());
-//    }
 }
