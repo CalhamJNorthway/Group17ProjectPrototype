@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 
 import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
+import com.example.calhamnorthway.group17projectpart4.data.Match;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
-
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +25,10 @@ import com.example.calhamnorthway.group17projectpart4.fragments.messaging.Conver
  * {@link MessagingMatchesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class MessagingMatchesFragment extends Fragment {
+public class MessagingMatchesFragment extends Fragment{
 
     private OnFragmentInteractionListener listener;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -44,7 +46,7 @@ public class MessagingMatchesFragment extends Fragment {
     private ViewPager viewPager;
 
 
-    public MessagingMatchesFragment() {
+    public MessagingMatchesFragment()  {
         // Required empty public constructor
     }
 
@@ -59,6 +61,10 @@ public class MessagingMatchesFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         viewPager = v.findViewById(R.id.container);
         viewPager.setAdapter(pagerAdapter);
+
+
+
+
 
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
