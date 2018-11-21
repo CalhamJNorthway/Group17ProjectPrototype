@@ -2,15 +2,21 @@ package com.example.calhamnorthway.group17projectpart4.fragments.messaging;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Message;
@@ -87,25 +93,40 @@ public class MessagingFragment extends Fragment {
         adapter = new MessagingAdapter(conversation.getMessages());
         recyclerView.setAdapter(adapter);
 
+        recyclerView.scrollToPosition(adapter.getItemCount()-1);
+
+        ImageView imageView = v.findViewById(R.id.profile_image);
+        Glide.with(this)
+                .load(conversation.getPerson().getProfile().getPictureIds()[0])
+                .into(imageView);
+
+
+
         messageInput = v.findViewById(R.id.inputField);
         sendButton = v.findViewById(R.id.send);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onButtonPressed();
+                onSendMessage();
             }
         });
 
         return v;
     }
 
-    public void onButtonPressed() {
+    public void onSendMessage() {
         String newMessageText = messageInput.getText().toString();
         messageInput.setText("");
         Message newMessage = new Message(listener.getMainUser(), new Date(), newMessageText);
         conversation.setLastMessage(newMessage);
         adapter.addNewMessage(newMessage);
         recyclerView.scrollToPosition(adapter.getItemCount()-1);
+    }
+
+    public void onFabPressed() {
+        if(listener != null) {
+            listener.onGoToProfile(conversation.getPerson());
+        }
     }
 
     @Override
@@ -128,9 +149,20 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setToolbar(null);
         if(listener != null) {
             listener.hideKeyboard();
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setToolbar(toolbar);
+
+        listener.setTitle(conversation.getPerson().getName());
     }
 
     /**
@@ -147,5 +179,6 @@ public class MessagingFragment extends Fragment {
         void onGoToProfile(Person person);
         User getMainUser();
         void hideKeyboard();
+        void setTitle(String title);
     }
 }

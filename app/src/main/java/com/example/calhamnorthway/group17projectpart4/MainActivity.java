@@ -227,6 +227,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void setTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
     public void onGoToProfile() {
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
     }
