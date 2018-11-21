@@ -3,13 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/meetPeopleFragment">
+    app:startDestination="@id/messagingMatchesFragment">
 
     <fragment
         android:id="@+id/messagingMatchesFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment"
         android:label="@string/messages_and_matches"
-        tools:layout="@layout/fragment_messaging_matches" />
+        tools:layout="@layout/fragment_messaging_matches" >
+        <action
+            android:id="@+id/action_messagingMatchesFragment_to_profileDetailsFragment"
+            app:destination="@id/profileDetailsFragment" />
+        <action
+            android:id="@+id/action_messagingMatchesFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/meetPeopleFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment"
@@ -24,4 +31,9 @@
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
         android:label="fragment_profile_details"
         tools:layout="@layout/fragment_profile_details" />
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment"
+        android:label="fragment_conversation"
+        tools:layout="@layout/fragment_conversation" />
 </navigation>

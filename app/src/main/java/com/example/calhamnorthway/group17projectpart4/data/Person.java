@@ -1,10 +1,13 @@
 package com.example.calhamnorthway.group17projectpart4.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.calhamnorthway.group17projectpart4.R;
 
 import java.util.ArrayList;
 
-public class Person {
+public class Person implements Parcelable {
     private String name;
     private int age;
     private Gender gender;
@@ -46,6 +49,8 @@ public class Person {
     public boolean isLikesUser() {
         return likesUser;
     }
+
+
 
     public static final ArrayList<Person> people = new ArrayList<>();
 
@@ -171,4 +176,39 @@ public class Person {
         Person person = new Person(name, age, gender, profile, likesUser);
         people.add(person);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeInt(this.age);
+        dest.writeInt(this.gender == null ? -1 : this.gender.ordinal());
+        dest.writeParcelable(this.profile, flags);
+        dest.writeByte(this.likesUser ? (byte) 1 : (byte) 0);
+    }
+
+    protected Person(Parcel in) {
+        this.name = in.readString();
+        this.age = in.readInt();
+        int tmpGender = in.readInt();
+        this.gender = tmpGender == -1 ? null : Gender.values()[tmpGender];
+        this.profile = in.readParcelable(Profile.class.getClassLoader());
+        this.likesUser = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
+        @Override
+        public Person createFromParcel(Parcel source) {
+            return new Person(source);
+        }
+
+        @Override
+        public Person[] newArray(int size) {
+            return new Person[size];
+        }
+    };
 }
