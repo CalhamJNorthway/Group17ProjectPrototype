@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
 
     private ArrayList<Person> peopleToMeet;
-    private TextView dates;
 
     private User mainUser;
 
@@ -118,13 +117,8 @@ public class MainActivity extends AppCompatActivity
 
         long hour = 1000 * 60 * 60;
 
-        dates=findViewById(R.id.dateMatched);
         Date current = Calendar.getInstance().getTime();
         Date temp = new Date(current.getTime() - (hour * 461));
-
-
-
-
         matches.add(new Match(Person.people.get(0), temp));
 
         temp = new Date(current.getTime() - (hour * 52));
