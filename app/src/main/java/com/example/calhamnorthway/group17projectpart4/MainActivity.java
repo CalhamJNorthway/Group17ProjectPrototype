@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Gender;
@@ -30,10 +29,10 @@ import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatches
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -44,8 +43,8 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity
         implements MeetPeopleFragment.OnFragmentInteractionListener,
         MessagingMatchesFragment.OnFragmentInteractionListener,
-        ConversationsListFragment.OnListFragmentInteractionListener,
-        MatchesListFragment.OnListFragmentInteractionListener,
+        ConversationsListFragment.OnConversationListFragmentInteractionListener,
+        MatchesListFragment.OnMatchesListFragmentInteractionListener,
         MessagingFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
@@ -66,6 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         //Creates a new Saved Instance State Bundle if null
         if (savedInstanceState == null)
+            //noinspection UnusedAssignment
             savedInstanceState = new Bundle();
 
         //Sets up the view content and the action bar
@@ -230,7 +230,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar !=null) {
+                actionBar.setTitle(title);
+        }
     }
 
     @Override
@@ -249,14 +252,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Match item) {
-    Log.d(TAG,"inListFragmentInteraction: Matches" + item);
+        Log.d(TAG,"inListFragmentInteraction: Matches" + item);
     }
 
-
-
     @Override
-    public void onListFragmentInteraction(Conversation item) {
-        Log.d(TAG, "onListFragmentInteraction: Conversation " + item);
+    public void onConversationListItemInteraction(Conversation item) {
+        Log.d(TAG, "onConversationListItemInteraction: Conversation " + item);
         Bundle bundle = MessagingFragment.createArgumentBundle(item);
         navController.navigate(R.id.action_messagingMatchesFragment_to_conversationFragment, bundle);
     }

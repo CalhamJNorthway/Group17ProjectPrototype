@@ -2,6 +2,7 @@ package com.example.calhamnorthway.group17projectpart4.fragments.matches;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,26 +13,19 @@ import android.view.ViewGroup;
 import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Match;
-import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsAdapter;
+import com.example.calhamnorthway.group17projectpart4.data.User;
 
 import java.util.ArrayList;
 
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnMatchesListFragmentInteractionListener}
  * interface.
  */
 public class MatchesListFragment extends Fragment {
 
-
-
-
-
-
-    private OnListFragmentInteractionListener listener;
+    private OnMatchesListFragmentInteractionListener listener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -42,26 +36,17 @@ public class MatchesListFragment extends Fragment {
 
     @SuppressWarnings("unused")
     public static MatchesListFragment newInstance() {
-        MatchesListFragment fragment = new MatchesListFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-        return fragment;
+        return new MatchesListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
-
-//        if (getArguments() != null) {
-//        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_list, container, false);
 
@@ -70,25 +55,21 @@ public class MatchesListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            ArrayList<Match> matches = ((MainActivity) getActivity()).getMainUser().getMatches();
+            ArrayList<Match> matches = listener.getMainUser().getMatches();
             recyclerView.setAdapter(new MatchesAdapter(matches,listener));
-
-
-
 
         }
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            listener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnMatchesListFragmentInteractionListener) {
+            listener = (OnMatchesListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnMatchesListFragmentInteractionListener");
         }
     }
 
@@ -108,9 +89,9 @@ public class MatchesListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
+    public interface OnMatchesListFragmentInteractionListener {
         void onListFragmentInteraction(Match item);
+        User getMainUser();
 
     }
 }
