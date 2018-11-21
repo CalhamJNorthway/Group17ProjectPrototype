@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Gender;
@@ -29,6 +30,7 @@ import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatches
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
 
     private ArrayList<Person> peopleToMeet;
+    private TextView dates;
 
     private User mainUser;
 
@@ -115,8 +118,13 @@ public class MainActivity extends AppCompatActivity
 
         long hour = 1000 * 60 * 60;
 
+        dates=findViewById(R.id.dateMatched);
         Date current = Calendar.getInstance().getTime();
         Date temp = new Date(current.getTime() - (hour * 461));
+
+
+
+
         matches.add(new Match(Person.people.get(0), temp));
 
         temp = new Date(current.getTime() - (hour * 52));
@@ -247,7 +255,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Match item) {
-
+    Log.d(TAG,"inListFragmentInteraction: Matches" + item);
     }
 
 
