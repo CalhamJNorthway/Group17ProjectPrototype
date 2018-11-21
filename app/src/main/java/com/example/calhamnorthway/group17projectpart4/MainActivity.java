@@ -22,6 +22,7 @@ import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         implements MeetPeopleFragment.OnFragmentInteractionListener,
         MessagingMatchesFragment.OnFragmentInteractionListener,
         ConversationsListFragment.OnListFragmentInteractionListener,
+        ProfileDetailsFragment.OnFragmentInteractionListener,
         MatchesListFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
@@ -51,8 +53,9 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
 
     private ArrayList<Person> peopleToMeet;
-
+    private Person userToView;
     private User mainUser;
+    private int personIndex = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,6 +139,8 @@ public class MainActivity extends AppCompatActivity
         peopleToMeet.add(Person.people.get(8));
         peopleToMeet.add(Person.people.get(10));
 
+        userToView = peopleToMeet.get(personIndex);
+
         //Set up Conversations
         ArrayList<Conversation> conversations = new ArrayList<>();
 
@@ -185,6 +190,8 @@ public class MainActivity extends AppCompatActivity
         return mainUser;
     }
 
+    public Person getUserToView() { return userToView; }
+
     @Override
     public void onGoToProfile() {
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
@@ -203,5 +210,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Conversation item) {
         Log.d(TAG, "onListFragmentInteraction: Conversation " + item);
+    }
+
+    public Person onLike(){
+        this.personIndex++;
+        return peopleToMeet.get(personIndex);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Person item) {
+
     }
 }

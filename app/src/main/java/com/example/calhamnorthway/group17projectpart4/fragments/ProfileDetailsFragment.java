@@ -3,12 +3,18 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
+import com.example.calhamnorthway.group17projectpart4.data.Person;
+import com.example.calhamnorthway.group17projectpart4.data.Profile;
+import com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ViewPagerAdapter;
 
 
 /**
@@ -21,6 +27,8 @@ public class ProfileDetailsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private Person potentialMatch;
+
     public ProfileDetailsFragment() {
         // Required empty public constructor
     }
@@ -30,14 +38,13 @@ public class ProfileDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_details, container, false);
-    }
+        View v = inflater.inflate(R.layout.fragment_profile_details, container, false);
+        setPerson(((MainActivity)getActivity()).getUserToView());
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        ViewPager viewPager = v.findViewById(R.id.profilePicSlider);
+        viewPager.setAdapter(new ViewPagerAdapter(getActivity(), potentialMatch.getProfile().getPictureIds()));
+
+        return v;
     }
 
     @Override
@@ -68,7 +75,10 @@ public class ProfileDetailsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onListFragmentInteraction(Person item);
+    }
+
+    private void setPerson(Person potentialMatch){
+        this.potentialMatch = potentialMatch;
     }
 }

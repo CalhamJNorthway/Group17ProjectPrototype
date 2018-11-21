@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_messaging_matches" />
     <fragment
         android:id="@+id/meetPeopleFragment"
-        android:name="com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
         android:label="@string/meet_new_people"
         tools:layout="@layout/fragment_meet_people" >
         <action
