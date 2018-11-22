@@ -26,6 +26,7 @@ import com.example.calhamnorthway.group17projectpart4.data.User;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
@@ -42,6 +43,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity
         implements MeetPeopleFragment.OnFragmentInteractionListener,
+        ProfileDetailsFragment.OnFragmentInteractionListener,
         MessagingMatchesFragment.OnFragmentInteractionListener,
         ConversationsListFragment.OnConversationListFragmentInteractionListener,
         MatchesListFragment.OnMatchesListFragmentInteractionListener,
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
 
     private ArrayList<Person> peopleToMeet;
+    private int personIndex = 0;
 
     private User mainUser;
 
@@ -241,8 +244,25 @@ public class MainActivity extends AppCompatActivity
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
     }
 
-    public void onGoToProfile(Person person) {
+    @Override
+    public Person onLike() {
+        if(peopleToMeet.get(personIndex).isLikesUser()){
+            Match newMatch = new Match(peopleToMeet.get(personIndex), new Date());
+            ArrayList<Match> newMatchList = mainUser.getMatches();
+            newMatchList.add(newMatch);
+        }
+        personIndex++;
+        return peopleToMeet.get(personIndex);
+    }
 
+    @Override
+    public Person onDeny() {
+        personIndex++;
+        return peopleToMeet.get(personIndex);
+    }
+
+    public Person getUserToView() {
+        return peopleToMeet.get(personIndex);
     }
 
     @Override
@@ -252,6 +272,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Match item) {
+
         Log.d(TAG,"inListFragmentInteraction: Matches" + item);
     }
 
