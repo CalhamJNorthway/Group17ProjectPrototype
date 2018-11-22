@@ -31,9 +31,11 @@ import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesL
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ImageFragment;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Deque;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
 
-    private ArrayList<Person> peopleToMeet;
+    private Deque<Person> peopleToMeet;
     private int personIndex = 0;
 
     private User mainUser;
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         mainUser.setMatches(matches);
 
         //Set up people to meet
-        peopleToMeet = new ArrayList<>();
+        peopleToMeet = new ArrayDeque<>();
         peopleToMeet.add(Person.people.get(1));
         peopleToMeet.add(Person.people.get(2));
         peopleToMeet.add(Person.people.get(4));
@@ -273,35 +275,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Person onLike() {
-        Person person = peopleToMeet.get(personIndex);
-        Log.d(TAG, "onLike: person " + person.getName() + " likes you:  " + person.likesUser());
-        if(peopleToMeet.get(personIndex).likesUser()){
-            Match newMatch = new Match(peopleToMeet.get(personIndex), new Date());
+        peopleToMeet.pollFirst();
+        Person person = peopleToMeet.peekFirst();
+        if(person != null && person.likesUser()){
+            Match newMatch = new Match(person, new Date());
             ArrayList<Match> newMatchList = mainUser.getMatches();
             newMatchList.add(newMatch);
-            Log.d(TAG, "onLike: new match " + newMatch);
         }
-        personIndex++;
-        return peopleToMeet.get(personIndex);
+        return person;
     }
 
     @Override
     public Person onDeny() {
-        personIndex++;
-        Log.d(TAG, "onDeny: " + (personIndex < peopleToMeet.size()));
-        if (personIndex < peopleToMeet.size()){
-            return peopleToMeet.get(personIndex);
-        } else {
-            return null;
-        }
+        peopleToMeet.pollFirst();
+        return peopleToMeet.peekFirst();
     }
 
     public Person getUserToView() {
-        if (personIndex < peopleToMeet.size()){
-            return peopleToMeet.get(personIndex);
-        }else {
-            return null;
-        }
+        return peopleToMeet.peekFirst();
     }
 
     @Override

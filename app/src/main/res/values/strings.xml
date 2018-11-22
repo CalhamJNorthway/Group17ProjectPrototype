@@ -16,4 +16,6 @@
 
     <string name="denyButton">"-"</string>
     <string name="acceptButton">"+"</string>
+
+    <string name="no_more_people_warning">No More New People To Meet\nTry Again Later</string>
 </resources>

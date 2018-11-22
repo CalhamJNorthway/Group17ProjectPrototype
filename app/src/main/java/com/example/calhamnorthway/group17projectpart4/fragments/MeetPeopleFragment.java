@@ -9,20 +9,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Person;
-import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
 
 public class MeetPeopleFragment extends Fragment {
-    private User loggedInUser;
 
     private ProfileDetailsFragment profileDescription;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton likeButton;
+    private FloatingActionButton denyButton;
 
     public MeetPeopleFragment() {
         // Required empty public constructor
@@ -43,32 +42,34 @@ public class MeetPeopleFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_meet_people, container, false);
 
-        this.profileDescription = new ProfileDetailsFragment();
-        FragmentManager fm = getChildFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.contentFragment, profileDescription);
-        transaction.commit();
+        likeButton = v.findViewById(R.id.acceptButton);
+        denyButton = v.findViewById(R.id.denyButton);
 
+        if(((MainActivity)getActivity()).getUserToView() != null) {
+            this.profileDescription = new ProfileDetailsFragment();
+            FragmentManager fm = getChildFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.contentFragment, profileDescription);
+            transaction.commit();
 
-        setLoggedInUser(((MainActivity)getActivity()).getMainUser());
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Person next = mListener.onLike();
+                    setNextPersonOrNoMorePeopleWarning(next);
+                }
+            });
 
-        FloatingActionButton likeButton = v.findViewById(R.id.acceptButton);
-        likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Person next = mListener.onLike();
-                profileDescription.setPerson(next);
-            }
-        });
-
-        FloatingActionButton denyButton = v.findViewById(R.id.denyButton);
-        denyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Person next = mListener.onDeny();
-                profileDescription.setPerson(next);
-            }
-        });
+            denyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Person next = mListener.onDeny();
+                    setNextPersonOrNoMorePeopleWarning(next);
+                }
+            });
+        } else {
+            showNoMorePeopleWarning();
+        }
 
         return v;
     }
@@ -105,7 +106,24 @@ public class MeetPeopleFragment extends Fragment {
         Person onDeny();
     }
 
-    private void setLoggedInUser(User loggedInUser){
-        this.loggedInUser = loggedInUser;
+    private void setNextPersonOrNoMorePeopleWarning(Person next) {
+        if(next != null) {
+            profileDescription.setPerson(next);
+        } else {
+            showNoMorePeopleWarning();
+        }
+    }
+
+    private void showNoMorePeopleWarning(){
+        likeButton.setEnabled(false);
+        likeButton.setImageResource(R.drawable.ic_check_grey_300_24dp);
+        denyButton.setEnabled(false);
+        denyButton.setImageResource(R.drawable.ic_close_grey_300_24dp);
+
+        Fragment fragment = NoMorePeopleFragment.newInstance();
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentFragment, fragment);
+        transaction.commit();
     }
 }
