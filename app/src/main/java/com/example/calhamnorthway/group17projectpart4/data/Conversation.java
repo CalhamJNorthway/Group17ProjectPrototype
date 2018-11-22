@@ -57,6 +57,21 @@ public class Conversation implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Conversation)) return false;
+
+        Conversation that = (Conversation) o;
+
+        return user != null ? user.equals(that.user) : that.user == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

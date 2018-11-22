@@ -24,6 +24,8 @@ import com.example.calhamnorthway.group17projectpart4.data.Message;
 import com.example.calhamnorthway.group17projectpart4.data.Person;
 import com.example.calhamnorthway.group17projectpart4.data.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -127,6 +129,12 @@ public class MessagingFragment extends Fragment {
         String newMessageText = messageInput.getText().toString();
         messageInput.setText("");
         Message newMessage = new Message(listener.getMainUser(), new Date(), newMessageText);
+
+        ArrayList<Conversation> arrayList = listener.getMainUser().getConversations();
+        if(!arrayList.get(0).equals(conversation)) {
+            arrayList.remove(conversation);
+            arrayList.add(0, conversation);
+        }
         conversation.setLastMessage(newMessage);
         adapter.addNewMessage(newMessage);
         recyclerView.scrollToPosition(adapter.getItemCount()-1);

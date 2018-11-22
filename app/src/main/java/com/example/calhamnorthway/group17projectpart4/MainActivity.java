@@ -279,8 +279,7 @@ public class MainActivity extends AppCompatActivity
         Person person = peopleToMeet.peekFirst();
         if(person != null && person.likesUser()){
             Match newMatch = new Match(person, new Date());
-            ArrayList<Match> newMatchList = mainUser.getMatches();
-            newMatchList.add(newMatch);
+            mainUser.getMatches().add(0, newMatch);
         }
         return person;
     }
@@ -328,6 +327,7 @@ public class MainActivity extends AppCompatActivity
         Conversation conversation = findConversation(person);
         if(conversation == null) {
             conversation = new Conversation(person);
+            mainUser.getConversations().add(0, conversation);
         }
 
         Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
