@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text=""
                 android:textAlignment="textEnd"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
@@ -62,18 +62,18 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/dateMatchedTitle"
+                        android:id="@+id/jobTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/dateMatchedText" />
+                        android:layout_weight="0"
+                        android:text="@string/jobTitleText" />
 
                     <TextView
-                        android:id="@+id/dateMatched"
+                        android:id="@+id/job"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="TextView" />
+                        android:text="" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="TextView" />
+                        android:text="" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text=""
                 android:textAlignment="viewEnd"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
@@ -117,6 +117,6 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="" />
     </LinearLayout>
 </FrameLayout>

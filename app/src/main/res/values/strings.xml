@@ -10,6 +10,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <string name="dateMatchedText">"Matched On: "</string>
+    <string name="jobTitleText">"Job Title: "</string>
     <string name="relationShipText">"Relationship Status: "</string>
+
+    <string name="denyButton">"-"</string>
+    <string name="acceptButton">"+"</string>
 </resources>

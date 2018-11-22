@@ -12,16 +12,11 @@
         tools:layout="@layout/fragment_messaging_matches" />
     <fragment
         android:id="@+id/meetPeopleFragment"
-        android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment"
         android:label="@string/meet_new_people"
         tools:layout="@layout/fragment_meet_people" >
-        <action
-            android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
-            app:destination="@id/profileDetailsFragment" />
+    <action
+        android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
+        />
     </fragment>
-    <fragment
-        android:id="@+id/profileDetailsFragment"
-        android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
-        android:label="fragment_profile_details"
-        tools:layout="@layout/fragment_profile_details" />
 </navigation>
