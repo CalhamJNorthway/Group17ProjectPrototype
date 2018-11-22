@@ -3,6 +3,8 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import com.example.calhamnorthway.group17projectpart4.data.User;
 
 public class MeetPeopleFragment extends Fragment {
     private User loggedInUser;
+
+    private ProfileDetailsFragment profileDescription;
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,6 +43,13 @@ public class MeetPeopleFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_meet_people, container, false);
 
+        this.profileDescription = new ProfileDetailsFragment();
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentFragment, profileDescription);
+        transaction.commit();
+
+
         setLoggedInUser(((MainActivity)getActivity()).getMainUser());
 
         final Button likeButton = v.findViewById(R.id.acceptButton);
@@ -46,6 +57,7 @@ public class MeetPeopleFragment extends Fragment {
             @Override
             public void onClick(View v) {
                     mListener.onLike();
+                    profileDescription.setDetails();
             }
         });
 
@@ -54,6 +66,7 @@ public class MeetPeopleFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.onDeny();
+                profileDescription.setDetails();
             }
         });
 

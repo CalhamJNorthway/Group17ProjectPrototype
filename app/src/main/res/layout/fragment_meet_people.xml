@@ -7,28 +7,24 @@
     tools:context=".fragments.MeetPeopleFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <FrameLayout
+    android:id="@+id/contentFragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" />
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_profile_details" />
-
-
-        <Button
-            android:id="@+id/denyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/denyButton"
-            android:visibility="visible" />
+    <Button
+        android:id="@+id/denyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:text="@string/denyButton"
+        android:visibility="visible" />
 
     <Button
             android:id="@+id/acceptButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="end|bottom"
             android:text="@string/acceptButton"
             android:visibility="visible"/>
     </FrameLayout>
