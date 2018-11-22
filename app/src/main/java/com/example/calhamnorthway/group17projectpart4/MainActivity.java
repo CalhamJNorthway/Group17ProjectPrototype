@@ -33,7 +33,6 @@ import com.example.calhamnorthway.group17projectpart4.fragments.messaging.Conver
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -217,6 +216,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onGoToProfile(Person person) {
+
+    }
+
+    @Override
     public User getMainUser(){
         return mainUser;
     }
@@ -246,10 +250,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Person onLike() {
-        if(peopleToMeet.get(personIndex).isLikesUser()){
+        Person person = peopleToMeet.get(personIndex);
+        Log.d(TAG, "onLike: person " + person.getName() + " likes you:  " + person.likesUser());
+        if(peopleToMeet.get(personIndex).likesUser()){
             Match newMatch = new Match(peopleToMeet.get(personIndex), new Date());
             ArrayList<Match> newMatchList = mainUser.getMatches();
             newMatchList.add(newMatch);
+            Log.d(TAG, "onLike: new match " + newMatch);
         }
         personIndex++;
         return peopleToMeet.get(personIndex);
@@ -258,11 +265,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Person onDeny() {
         personIndex++;
-        return peopleToMeet.get(personIndex);
+        Log.d(TAG, "onDeny: " + (personIndex < peopleToMeet.size()));
+        if (personIndex < peopleToMeet.size()){
+            return peopleToMeet.get(personIndex);
+        }else {
+            return null;
+        }
     }
 
     public Person getUserToView() {
-        return peopleToMeet.get(personIndex);
+        if (personIndex < peopleToMeet.size()){
+            return peopleToMeet.get(personIndex);
+        }else {
+            return null;
+        }
     }
 
     @Override

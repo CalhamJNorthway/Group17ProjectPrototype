@@ -23,11 +23,7 @@ public class Person implements Parcelable {
     }
 
     public Person(String name, int age, Gender gender, Profile profile) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.profile = profile;
-        this.likesUser = false;
+        this(name, age, gender, profile, false);
     }
 
     public String getName() {
@@ -46,11 +42,9 @@ public class Person implements Parcelable {
         return profile;
     }
 
-    public boolean isLikesUser() {
+    public boolean likesUser() {
         return likesUser;
     }
-
-
 
     public static final ArrayList<Person> people = new ArrayList<>();
 

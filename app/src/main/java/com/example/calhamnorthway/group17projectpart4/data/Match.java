@@ -13,19 +13,23 @@ public class Match {
         this.dateMatched = dateMatched;
     }
 
-
-
-
     public Person getPerson() {
         return user;
     }
 
     public String getDateMatched() {
-
         //formats Date to a String
         SimpleDateFormat formatter=  new SimpleDateFormat("dd.MM.yyyy");//formating date
         String date = formatter.format(dateMatched);
 
         return date;
+    }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "user=" + user +
+                ", dateMatched=" + dateMatched +
+                '}';
     }
 }

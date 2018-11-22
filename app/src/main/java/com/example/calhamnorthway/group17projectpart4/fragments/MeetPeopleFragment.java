@@ -56,17 +56,17 @@ public class MeetPeopleFragment extends Fragment {
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    mListener.onLike();
-                    profileDescription.setDetails();
+                Person next = mListener.onLike();
+                profileDescription.setPerson(next);
             }
         });
 
-        final Button denyButton = v.findViewById(R.id.acceptButton);
+        final Button denyButton = v.findViewById(R.id.denyButton);
         denyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDeny();
-                profileDescription.setDetails();
+                Person next = mListener.onDeny();
+                profileDescription.setPerson(next);
             }
         });
 

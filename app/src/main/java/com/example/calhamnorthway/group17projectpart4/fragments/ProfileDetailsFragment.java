@@ -46,32 +46,16 @@ public class ProfileDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_details, container, false);
-        
-        setPerson(((MainActivity)getActivity()).getUserToView());
 
         this.viewPager = v.findViewById(R.id.profilePicSlider);
-        viewPager.setAdapter(new ViewPagerAdapter(getActivity(), potentialMatch.getProfile().getPictureIds()));
-
         this.name = v.findViewById(R.id.name);
-        name.setText(potentialMatch.getName());
-
         this.age = v.findViewById(R.id.age);
-        age.setText(potentialMatch.getAge()+"");
-
         this.relationShipStatus = v.findViewById(R.id.relationshipStatus);
-        relationShipStatus.setText(potentialMatch.getProfile().getRelationshipStatus().toString());
-
         this.jobTitle = v.findViewById(R.id.job);
-        jobTitle.setText(potentialMatch.getProfile().getJob());
-
         this.gender = v.findViewById(R.id.gender);
-        gender.setText(potentialMatch.getGender().toString());
-
         this.description = v.findViewById(R.id.description);
-        description.setText(potentialMatch.getProfile().getDescription());
 
-        setDetails();
-
+        setPerson(((MainActivity) getActivity()).getUserToView());
         return v;
     }
 
@@ -106,25 +90,21 @@ public class ProfileDetailsFragment extends Fragment {
 
     }
 
-    public void setDetails() {
-        setPerson(((MainActivity)getActivity()).getUserToView());
-
-        this.viewPager.setAdapter(new ViewPagerAdapter(getActivity(), potentialMatch.getProfile().getPictureIds()));
-
-        this.name.setText(potentialMatch.getName());
-
-        this.age.setText(potentialMatch.getAge()+"");
-
-        this.relationShipStatus.setText(potentialMatch.getProfile().getRelationshipStatus().toString());
-
-        this.jobTitle.setText(potentialMatch.getProfile().getJob());
-
-        this.gender.setText(potentialMatch.getGender().toString());
-
-        this.description.setText(potentialMatch.getProfile().getDescription());
+    public void setPerson(Person person) {
+        potentialMatch = person;
+        populateViews();
     }
 
-    private void setPerson(Person potentialMatch){
-        this.potentialMatch = potentialMatch;
+    private void populateViews() {
+        if(potentialMatch == null) {
+            return;
+        }
+        this.viewPager.setAdapter(new ViewPagerAdapter(getContext(), potentialMatch.getProfile().getPictureIds()));
+        this.name.setText(potentialMatch.getName());
+        this.age.setText(potentialMatch.getAge()+"");
+        this.relationShipStatus.setText(potentialMatch.getProfile().getRelationshipStatus().toString());
+        this.jobTitle.setText(potentialMatch.getProfile().getJob());
+        this.gender.setText(potentialMatch.getGender().toString());
+        this.description.setText(potentialMatch.getProfile().getDescription());
     }
 }
