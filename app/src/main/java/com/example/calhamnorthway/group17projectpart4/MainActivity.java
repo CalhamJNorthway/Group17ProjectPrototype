@@ -213,9 +213,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     public Person onLike(){
+        if(peopleToMeet.get(personIndex).isLikesUser()){
+            Match currentMatch = new Match(peopleToMeet.get(personIndex), new Date());
+            ArrayList<Match> newMatchList = mainUser.getMatches();
+            newMatchList.add(currentMatch);
+        }
         this.personIndex++;
         return peopleToMeet.get(personIndex);
     }
+
+    public Person onDeny(){
+        this.personIndex++;
+        return peopleToMeet.get(personIndex);
+    }
+
 
     @Override
     public void onListFragmentInteraction(Person item) {

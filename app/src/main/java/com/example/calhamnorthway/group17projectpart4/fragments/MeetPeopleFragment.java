@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
@@ -40,8 +41,21 @@ public class MeetPeopleFragment extends Fragment {
 
         setLoggedInUser(((MainActivity)getActivity()).getMainUser());
 
-        //onLikeButtonClick(){
-        //
+        final Button likeButton = v.findViewById(R.id.acceptButton);
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    mListener.onLike();
+            }
+        });
+
+        final Button denyButton = v.findViewById(R.id.acceptButton);
+        denyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDeny();
+            }
+        });
 
         return v;
     }
@@ -84,6 +98,7 @@ public class MeetPeopleFragment extends Fragment {
         // TODO: Update argument type and name
         void onGoToProfile();
         Person onLike();
+        Person onDeny();
     }
 
     private void setLoggedInUser(User loggedInUser){
