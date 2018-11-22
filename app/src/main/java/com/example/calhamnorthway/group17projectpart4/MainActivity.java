@@ -1,5 +1,6 @@
 package com.example.calhamnorthway.group17projectpart4;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,12 +8,13 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
 import com.example.calhamnorthway.group17projectpart4.data.Gender;
@@ -21,16 +23,16 @@ import com.example.calhamnorthway.group17projectpart4.data.Message;
 import com.example.calhamnorthway.group17projectpart4.data.Person;
 import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
+import com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Objects;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -41,8 +43,9 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity
         implements MeetPeopleFragment.OnFragmentInteractionListener,
         MessagingMatchesFragment.OnFragmentInteractionListener,
-        ConversationsListFragment.OnListFragmentInteractionListener,
-        MatchesListFragment.OnListFragmentInteractionListener {
+        ConversationsListFragment.OnConversationListFragmentInteractionListener,
+        MatchesListFragment.OnMatchesListFragmentInteractionListener,
+        MessagingFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
 
     private ArrayList<Person> peopleToMeet;
-    private TextView dates;
 
     private User mainUser;
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         //Creates a new Saved Instance State Bundle if null
         if (savedInstanceState == null)
+            //noinspection UnusedAssignment
             savedInstanceState = new Bundle();
 
         //Sets up the view content and the action bar
@@ -114,13 +117,8 @@ public class MainActivity extends AppCompatActivity
 
         long hour = 1000 * 60 * 60;
 
-        dates=findViewById(R.id.dateMatched);
         Date current = Calendar.getInstance().getTime();
         Date temp = new Date(current.getTime() - (hour * 461));
-
-
-
-
         matches.add(new Match(Person.people.get(0), temp));
 
         temp = new Date(current.getTime() - (hour * 52));
@@ -158,9 +156,9 @@ public class MainActivity extends AppCompatActivity
 
         conversations.add(new Conversation(Person.people.get(0), message1, message2, message3, message4));
 
-        message1 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour)),
+        message1 = new Message(Person.people.get(6), new Date(current.getTime()  - (hour)),
                 "Whats cooking good looking");
-        message2 = new Message(Person.people.get(0), new Date(current.getTime()  - (hour - 10000)),
+        message2 = new Message(Person.people.get(6), new Date(current.getTime()  - (hour - 10000)),
                 "I rarely say this to anyone but you are one sexy person");
 
         conversations.add(new Conversation(Person.people.get(6), message1, message2));
@@ -185,17 +183,66 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void showActionBar(boolean show) {
+        //Check if support action bar is not null
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar == null) {
+            return;
+        }
+
+        if(show) {
+            actionBar.show();
+        } else {
+            actionBar.hide();
+        }
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        if(toolbar == null) {
+            toolbar = this.toolbar;
+            setSupportActionBar(this.toolbar);
+            showActionBar(true);
+        } else {
+            showActionBar(false);
+            setSupportActionBar(toolbar);
+        }
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+    }
+
     public TabLayout getTabLayout() {
         return tabLayout;
     }
 
+    @Override
     public User getMainUser(){
         return mainUser;
     }
 
     @Override
+    public void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ?
+                null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+    }
+
+    @Override
+    public void setTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar !=null) {
+                actionBar.setTitle(title);
+        }
+    }
+
+    @Override
     public void onGoToProfile() {
         navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
+    }
+
+    public void onGoToProfile(Person person) {
+
     }
 
     @Override
@@ -205,11 +252,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Match item) {
-    Log.d(TAG,"inListFragmentInteraction: Matches" + item);
+        Log.d(TAG,"inListFragmentInteraction: Matches" + item);
     }
 
     @Override
-    public void onListFragmentInteraction(Conversation item) {
-        Log.d(TAG, "onListFragmentInteraction: Conversation " + item);
+    public void onConversationListItemInteraction(Conversation item) {
+        Log.d(TAG, "onConversationListItemInteraction: Conversation " + item);
+        Bundle bundle = MessagingFragment.createArgumentBundle(item);
+        navController.navigate(R.id.action_messagingMatchesFragment_to_conversationFragment, bundle);
     }
 }

@@ -1,8 +1,11 @@
 package com.example.calhamnorthway.group17projectpart4.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.calhamnorthway.group17projectpart4.R;
 
-public class Profile {
+public class Profile implements Parcelable {
     private String description;
     private String job;
     private RelationshipStatus relationshipStatus;
@@ -68,4 +71,37 @@ public class Profile {
             return new Profile(this);
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.description);
+        dest.writeString(this.job);
+        dest.writeInt(this.relationshipStatus == null ? -1 : this.relationshipStatus.ordinal());
+        dest.writeIntArray(this.pictureIds);
+    }
+
+    protected Profile(Parcel in) {
+        this.description = in.readString();
+        this.job = in.readString();
+        int tmpRelationshipStatus = in.readInt();
+        this.relationshipStatus = tmpRelationshipStatus == -1 ? null : RelationshipStatus.values()[tmpRelationshipStatus];
+        this.pictureIds = in.createIntArray();
+    }
+
+    public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
+        @Override
+        public Profile createFromParcel(Parcel source) {
+            return new Profile(source);
+        }
+
+        @Override
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
 }
