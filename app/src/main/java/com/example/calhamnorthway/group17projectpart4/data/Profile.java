@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.example.calhamnorthway.group17projectpart4.R;
 
+import java.util.Arrays;
+
 public class Profile implements Parcelable {
     private String description;
     private String job;
@@ -38,6 +40,23 @@ public class Profile implements Parcelable {
         return pictureIds;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Profile)) return false;
+
+        Profile profile = (Profile) o;
+
+        if (relationshipStatus != profile.relationshipStatus) return false;
+        return Arrays.equals(pictureIds, profile.pictureIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String description ="";
         private String job = "";
@@ -85,6 +104,7 @@ public class Profile implements Parcelable {
         dest.writeIntArray(this.pictureIds);
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected Profile(Parcel in) {
         this.description = in.readString();
         this.job = in.readString();

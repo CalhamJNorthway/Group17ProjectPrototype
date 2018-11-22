@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -108,6 +109,14 @@ public class MessagingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 onSendMessage();
+            }
+        });
+
+        FloatingActionButton fab = v.findViewById(R.id.profile_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabPressed();
             }
         });
 

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class Conversation implements Parcelable {
     private Person user;
@@ -22,6 +23,13 @@ public class Conversation implements Parcelable {
         this.lastMessage = messages[messages.length - 1];
         this.messages = new ArrayList<>();
         Collections.addAll(this.messages, messages);
+    }
+
+    public Conversation(Person user) {
+        this.user = user;
+        this.lastMessage = new Message(user, new Date(),"");
+        this.messages = new ArrayList<>();
+
     }
 
     public Person getPerson() {
@@ -60,6 +68,7 @@ public class Conversation implements Parcelable {
         dest.writeTypedList(this.messages);
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected Conversation(Parcel in) {
         this.user = in.readParcelable(Person.class.getClassLoader());
         this.lastMessage = in.readParcelable(Message.class.getClassLoader());

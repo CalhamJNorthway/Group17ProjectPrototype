@@ -3,6 +3,7 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,7 +52,7 @@ public class MessagingMatchesFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_messaging_matches, container, false);
         // Create the adapter that will return a fragment for each of the three
@@ -61,10 +62,6 @@ public class MessagingMatchesFragment extends Fragment{
         // Set up the ViewPager with the sections adapter.
         viewPager = v.findViewById(R.id.container);
         viewPager.setAdapter(pagerAdapter);
-
-
-
-
 
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
@@ -82,12 +79,6 @@ public class MessagingMatchesFragment extends Fragment{
         if (activity != null) {
             activity.showTabs(false);
             activity.getTabLayout().setupWithViewPager(null);
-        }
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (listener != null) {
-            listener.onFragmentInteraction(uri);
         }
     }
 
@@ -119,7 +110,6 @@ public class MessagingMatchesFragment extends Fragment{
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 
     /**

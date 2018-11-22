@@ -7,6 +7,7 @@ import com.example.calhamnorthway.group17projectpart4.R;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class Person implements Parcelable {
     private String name;
     private int age;
@@ -44,6 +45,25 @@ public class Person implements Parcelable {
 
     public boolean likesUser() {
         return likesUser;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+
+        Person person = (Person) o;
+
+        if (age != person.age) return false;
+        if (likesUser != person.likesUser) return false;
+        if (!name.equals(person.name)) return false;
+        if (gender != person.gender) return false;
+        return profile.equals(person.profile);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 
     public static final ArrayList<Person> people = new ArrayList<>();

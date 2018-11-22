@@ -29,6 +29,7 @@ import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatches
 import com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ImageFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity
         MessagingMatchesFragment.OnFragmentInteractionListener,
         ConversationsListFragment.OnConversationListFragmentInteractionListener,
         MatchesListFragment.OnMatchesListFragmentInteractionListener,
-        MessagingFragment.OnFragmentInteractionListener {
+        MessagingFragment.OnFragmentInteractionListener,
+        ImageFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -192,6 +194,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        Log.d(TAG, "showActionBar: " + show);
         if(show) {
             actionBar.show();
         } else {
@@ -213,11 +216,6 @@ public class MainActivity extends AppCompatActivity
 
     public TabLayout getTabLayout() {
         return tabLayout;
-    }
-
-    @Override
-    public void onGoToProfile(Person person) {
-
     }
 
     @Override
@@ -243,9 +241,34 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private Conversation findConversation(Person person) {
+        for (Conversation c : mainUser.getConversations()) {
+            if(c.getPerson().equals(person)){
+                return c;
+            }
+        }
+
+        return null;
+    }
+
+    private Match findMatch(Person person) {
+        for (Match m : mainUser.getMatches()) {
+            if(m.getPerson().equals(person)){
+                return m;
+            }
+        }
+
+        return null;
+    }
+
     @Override
-    public void onGoToProfile() {
-        navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
+    public void onGoToProfile(Person person) {
+        Match match = findMatch(person);
+        if(match == null) {
+            return;
+        }
+        Bundle bundle = ProfileDetailsFragment.createArgumentBundle(match);
+        navController.navigate(R.id.action_conversationFragment_to_profileDetailsFragment, bundle);
     }
 
     @Override
@@ -268,7 +291,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onDeny: " + (personIndex < peopleToMeet.size()));
         if (personIndex < peopleToMeet.size()){
             return peopleToMeet.get(personIndex);
-        }else {
+        } else {
             return null;
         }
     }
@@ -282,14 +305,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onListFragmentInteraction(Match item) {
-
-        Log.d(TAG,"inListFragmentInteraction: Matches" + item);
+    public void onMatchListItemInteraction(Match item) {
+        Bundle bundle = ProfileDetailsFragment.createArgumentBundle(item);
+        navController.navigate(R.id.action_messagingMatchesFragment_to_profileDetailsFragment, bundle);
     }
 
     @Override
@@ -297,5 +315,31 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onConversationListItemInteraction: Conversation " + item);
         Bundle bundle = MessagingFragment.createArgumentBundle(item);
         navController.navigate(R.id.action_messagingMatchesFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void onBack() {
+        navController.popBackStack();
+    }
+
+    @Override
+    public void onEnlarge(int imageId) {
+        Bundle bundle = ImageFragment.createArgumentBundle(imageId, ImageFragment.FULL_VIEW);
+        try {
+            navController.navigate(R.id.action_profileDetailsFragment_to_imageFragment, bundle);
+        } catch (IllegalArgumentException e) {
+            navController.navigate(R.id.action_meetPeopleFragment_to_imageFragment, bundle);
+        }
+    }
+
+    @Override
+    public void onMessagePerson(Person person) {
+        Conversation conversation = findConversation(person);
+        if(conversation == null) {
+            conversation = new Conversation(person);
+        }
+
+        Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
+        navController.navigate(R.id.action_profileDetailsFragment_to_conversationFragment, bundle);
     }
 }

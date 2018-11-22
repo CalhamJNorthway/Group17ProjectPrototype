@@ -2,6 +2,7 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,9 +28,8 @@ public class MeetPeopleFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static MeetPeopleFragment newInstance(String param1, String param2) {
-        MeetPeopleFragment fragment = new MeetPeopleFragment();
-        return fragment;
+    public static MeetPeopleFragment newInstance() {
+        return new MeetPeopleFragment();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MeetPeopleFragment extends Fragment {
 
         setLoggedInUser(((MainActivity)getActivity()).getMainUser());
 
-        final Button likeButton = v.findViewById(R.id.acceptButton);
+        FloatingActionButton likeButton = v.findViewById(R.id.acceptButton);
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +61,7 @@ public class MeetPeopleFragment extends Fragment {
             }
         });
 
-        final Button denyButton = v.findViewById(R.id.denyButton);
+        FloatingActionButton denyButton = v.findViewById(R.id.denyButton);
         denyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +71,6 @@ public class MeetPeopleFragment extends Fragment {
         });
 
         return v;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed() {
-        if (mListener != null) {
-            mListener.onGoToProfile();
-        }
     }
 
     @Override
@@ -108,8 +101,6 @@ public class MeetPeopleFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onGoToProfile();
         Person onLike();
         Person onDeny();
     }

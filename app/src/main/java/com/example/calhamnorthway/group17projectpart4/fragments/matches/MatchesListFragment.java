@@ -90,7 +90,7 @@ public class MatchesListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnMatchesListFragmentInteractionListener {
-        void onListFragmentInteraction(Match item);
+        void onMatchListItemInteraction(Match item);
         User getMainUser();
 
     }
