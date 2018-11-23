@@ -1,11 +1,12 @@
 package com.example.calhamnorthway.group17projectpart4;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +24,7 @@ import com.example.calhamnorthway.group17projectpart4.data.Message;
 import com.example.calhamnorthway.group17projectpart4.data.Person;
 import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
+import com.example.calhamnorthway.group17projectpart4.fragments.MatchedDialogFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity
         ConversationsListFragment.OnConversationListFragmentInteractionListener,
         MatchesListFragment.OnMatchesListFragmentInteractionListener,
         MessagingFragment.OnFragmentInteractionListener,
-        ImageFragment.OnFragmentInteractionListener {
+        ImageFragment.OnFragmentInteractionListener,
+        MatchedDialogFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -275,13 +278,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Person onLike() {
-        peopleToMeet.pollFirst();
-        Person person = peopleToMeet.peekFirst();
-        if(person != null && person.likesUser()){
-            Match newMatch = new Match(person, new Date());
+        Person personLiked = peopleToMeet.pollFirst();
+        if(personLiked != null && personLiked.likesUser()){
+            Match newMatch = new Match(personLiked, new Date());
             mainUser.getMatches().add(0, newMatch);
+
+            FragmentManager fm = getSupportFragmentManager();
+            MatchedDialogFragment matchedDialogFragment = MatchedDialogFragment.newInstance(personLiked);
+            matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog);
+            matchedDialogFragment.show(fm, "matched_dialog_fragment");
         }
-        return person;
+        return peopleToMeet.peekFirst();
     }
 
     @Override
@@ -327,10 +334,20 @@ public class MainActivity extends AppCompatActivity
         Conversation conversation = findConversation(person);
         if(conversation == null) {
             conversation = new Conversation(person);
-            mainUser.getConversations().add(0, conversation);
         }
 
         Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
         navController.navigate(R.id.action_profileDetailsFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void onMessageNewMatch(Person person) {
+        Conversation conversation = findConversation(person);
+        if(conversation == null) {
+            conversation = new Conversation(person);
+        }
+
+        Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
+        navController.navigate(R.id.action_meetPeopleFragment_to_conversationFragment, bundle);
     }
 }

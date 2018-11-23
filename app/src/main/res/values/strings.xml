@@ -18,4 +18,8 @@
     <string name="acceptButton">"+"</string>
 
     <string name="no_more_people_warning">No More New People To Meet\nTry Again Later</string>
+
+    <string name="its_a_match">It\'s a Match!</string>
+    <string name="send_a_message">Send a Message</string>
+    <string name="keep_looking">Keep Looking</string>
 </resources>
