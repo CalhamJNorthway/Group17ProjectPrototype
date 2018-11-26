@@ -5,6 +5,7 @@
 
     <string name="tab_label_matches">Matches</string>
     <string name="tab_label_messaging">Messages</string>
+    <string name="Messages_hint">Type a message...</string>
 <string name="match_name">Your match: </string>
     <string name="matchDate">Date Matched: </string>
 

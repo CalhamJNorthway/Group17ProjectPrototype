@@ -1,5 +1,7 @@
 package com.example.calhamnorthway.group17projectpart4.fragments.messaging;
 
+import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,33 +13,36 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
-import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment.OnListFragmentInteractionListener;
+import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment.OnConversationListFragmentInteractionListener;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Conversation} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link ConversationsListFragment.OnConversationListFragmentInteractionListener}.
  */
+@SuppressWarnings("WeakerAccess")
 public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ViewHolder> {
 
     private final List<Conversation> items;
-    private final OnListFragmentInteractionListener listener;
+    private final OnConversationListFragmentInteractionListener listener;
 
-    public ConversationsAdapter(List<Conversation> items, OnListFragmentInteractionListener listener) {
+    public ConversationsAdapter(List<Conversation> items, OnConversationListFragmentInteractionListener listener) {
         this.items = items;
         this.listener = listener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_converation, parent, false);
         return new ViewHolder(view);
     }
 
+    @SuppressLint("CheckResult")
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.item = items.get(position);
         holder.nameView.setText(holder.item.getPerson().getName());
         holder.messageView.setText(holder.item.getLastMessage().getText());
@@ -56,7 +61,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
                 if (null != listener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    listener.onListFragmentInteraction(holder.item);
+                    listener.onConversationListItemInteraction(holder.item);
                 }
             }
         });
@@ -82,6 +87,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
             messageView = view.findViewById(R.id.last_message);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + nameView.getText() +": " +messageView.getText() + "'";

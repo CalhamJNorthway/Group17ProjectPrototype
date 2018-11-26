@@ -1,9 +1,12 @@
 package com.example.calhamnorthway.group17projectpart4.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Conversation {
+public class Conversation implements Parcelable {
     private Person user;
     private Message lastMessage;
     private ArrayList<Message> messages;
@@ -40,4 +43,38 @@ public class Conversation {
     public boolean addMessage(Message message){
         return messages.add(message);
     }
+
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.user, flags);
+        dest.writeParcelable(this.lastMessage, flags);
+        dest.writeTypedList(this.messages);
+    }
+
+    protected Conversation(Parcel in) {
+        this.user = in.readParcelable(Person.class.getClassLoader());
+        this.lastMessage = in.readParcelable(Message.class.getClassLoader());
+        this.messages = in.createTypedArrayList(Message.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Conversation> CREATOR = new Parcelable.Creator<Conversation>() {
+        @Override
+        public Conversation createFromParcel(Parcel source) {
+            return new Conversation(source);
+        }
+
+        @Override
+        public Conversation[] newArray(int size) {
+            return new Conversation[size];
+        }
+    };
 }

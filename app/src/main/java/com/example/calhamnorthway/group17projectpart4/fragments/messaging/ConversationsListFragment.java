@@ -2,6 +2,7 @@ package com.example.calhamnorthway.group17projectpart4.fragments.messaging;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,21 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
 import com.example.calhamnorthway.group17projectpart4.data.Conversation;
+import com.example.calhamnorthway.group17projectpart4.data.User;
 
 import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnConversationListFragmentInteractionListener}
  * interface.
  */
 public class ConversationsListFragment extends Fragment {
 
-    private OnListFragmentInteractionListener listener;
+    private OnConversationListFragmentInteractionListener listener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -32,23 +33,18 @@ public class ConversationsListFragment extends Fragment {
     public ConversationsListFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ConversationsListFragment newInstance() {
-        ConversationsListFragment fragment = new ConversationsListFragment();
-        return fragment;
+        return new ConversationsListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (getArguments() != null) {
-//        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_converations_list, container, false);
 
@@ -57,7 +53,7 @@ public class ConversationsListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            ArrayList<Conversation> conversations = ((MainActivity) getActivity()).getMainUser().getConversations();
+            ArrayList<Conversation> conversations = listener.getMainUser().getConversations();
             recyclerView.setAdapter(new ConversationsAdapter(conversations, listener));
         }
         return view;
@@ -67,11 +63,11 @@ public class ConversationsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            listener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnConversationListFragmentInteractionListener) {
+            listener = (OnConversationListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnConversationListFragmentInteractionListener");
         }
     }
 
@@ -91,7 +87,8 @@ public class ConversationsListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Conversation item);
+    public interface OnConversationListFragmentInteractionListener {
+        void onConversationListItemInteraction(Conversation item);
+        User getMainUser();
     }
 }
