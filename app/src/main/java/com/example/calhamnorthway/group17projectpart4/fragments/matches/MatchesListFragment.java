@@ -27,10 +27,6 @@ import android.widget.TextView;
 public class MatchesListFragment extends Fragment {
 
 
-
-
-
-
     private OnListFragmentInteractionListener listener;
 
     /**
@@ -72,8 +68,6 @@ public class MatchesListFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             ArrayList<Match> matches = ((MainActivity) getActivity()).getMainUser().getMatches();
             recyclerView.setAdapter(new MatchesAdapter(matches,listener));
-
-
 
 
         }
