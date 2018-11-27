@@ -2,6 +2,7 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,7 @@ public class MeetPeopleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton likeButton;
     private FloatingActionButton denyButton;
+    private CoordinatorLayout coordinatorLayout;
 
     public MeetPeopleFragment() {
         // Required empty public constructor
@@ -44,6 +46,7 @@ public class MeetPeopleFragment extends Fragment {
 
         likeButton = v.findViewById(R.id.acceptButton);
         denyButton = v.findViewById(R.id.denyButton);
+        coordinatorLayout = v.findViewById(R.id.coordinator);
 
         if(((MainActivity)getActivity()).getUserToView() != null) {
             this.profileDescription = new ProfileDetailsFragment();
@@ -52,10 +55,17 @@ public class MeetPeopleFragment extends Fragment {
             transaction.replace(R.id.contentFragment, profileDescription);
             transaction.commit();
 
+            mListener.setOnMeetPeopleActionUndoListener(new OnMeetPeopleActionUndo() {
+                @Override
+                public void onUndo(Person person) {
+                    setNextPersonOrNoMorePeopleWarning(person);
+                }
+            });
+
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Person next = mListener.onLike();
+                    Person next = mListener.onLike(coordinatorLayout);
                     setNextPersonOrNoMorePeopleWarning(next);
                 }
             });
@@ -63,7 +73,7 @@ public class MeetPeopleFragment extends Fragment {
             denyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Person next = mListener.onDeny();
+                    Person next = mListener.onDeny(coordinatorLayout);
                     setNextPersonOrNoMorePeopleWarning(next);
                 }
             });
@@ -102,16 +112,37 @@ public class MeetPeopleFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        Person onLike();
-        Person onDeny();
+        Person onLike(View view);
+        Person onDeny(View view);
+        void setOnMeetPeopleActionUndoListener(OnMeetPeopleActionUndo listener);
+    }
+
+    public interface OnMeetPeopleActionUndo {
+        void onUndo(Person person);
     }
 
     private void setNextPersonOrNoMorePeopleWarning(Person next) {
         if(next != null) {
-            profileDescription.setPerson(next);
+            if(profileDescription.isResumed()) {
+                profileDescription.setPerson(next);
+            } else {
+                showMorePeople();
+            }
         } else {
             showNoMorePeopleWarning();
         }
+    }
+
+    private void showMorePeople() {
+        likeButton.setEnabled(true);
+        likeButton.setImageResource(R.drawable.ic_check_green_400_24dp);
+        denyButton.setEnabled(true);
+        denyButton.setImageResource(R.drawable.ic_close_red_400_24dp);
+
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentFragment, profileDescription);
+        transaction.commit();
     }
 
     private void showNoMorePeopleWarning(){

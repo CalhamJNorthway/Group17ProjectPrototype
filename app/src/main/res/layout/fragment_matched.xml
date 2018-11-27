@@ -39,29 +39,38 @@
     <Button
         android:id="@+id/send_a_message"
         style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
         android:text="@string/send_a_message"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/avatarView"
+        app:layout_constraintStart_toStartOf="@+id/avatarView"
         app:layout_constraintTop_toBottomOf="@+id/avatarView" />
 
     <Button
         android:id="@+id/skip"
         style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:text="@string/keep_looking"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/avatarView"
+        app:layout_constraintStart_toStartOf="@+id/avatarView"
         app:layout_constraintTop_toBottomOf="@+id/send_a_message" />
+
+    <Button
+        android:id="@+id/undo"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/undo"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="@+id/skip"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/avatarView"
+        app:layout_constraintTop_toBottomOf="@+id/skip" />
 
 </android.support.constraint.ConstraintLayout>

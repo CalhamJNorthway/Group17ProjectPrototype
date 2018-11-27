@@ -3,7 +3,10 @@ package com.example.calhamnorthway.group17projectpart4;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -63,8 +66,10 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
 
+    private MeetPeopleFragment.OnMeetPeopleActionUndo undoListener;
+    private Snackbar snackbar;
+
     private Deque<Person> peopleToMeet;
-    private int personIndex = 0;
 
     private User mainUser;
 
@@ -277,24 +282,66 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public Person onLike() {
-        Person personLiked = peopleToMeet.pollFirst();
-        if(personLiked != null && personLiked.likesUser()){
+    public Person onLike(View view) {
+        final Person personLiked = peopleToMeet.pollFirst();
+
+        if(personLiked == null) {
+            return null;
+        }
+
+        if(personLiked.likesUser()){
             Match newMatch = new Match(personLiked, new Date());
             mainUser.getMatches().add(0, newMatch);
+            dismissSnackbar();
 
             FragmentManager fm = getSupportFragmentManager();
             MatchedDialogFragment matchedDialogFragment = MatchedDialogFragment.newInstance(personLiked);
             matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog);
             matchedDialogFragment.show(fm, "matched_dialog_fragment");
+        } else {
+            String likedMessage = getString(R.string.you_liked) + " " + personLiked.getName();
+            createSnackbarWithUndo(view, likedMessage, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    undoListener.onUndo(personLiked);
+                    peopleToMeet.addFirst(personLiked);
+                }
+            });
         }
+
         return peopleToMeet.peekFirst();
     }
 
     @Override
-    public Person onDeny() {
-        peopleToMeet.pollFirst();
+    public Person onDeny(View view) {
+        final Person person = peopleToMeet.pollFirst();
+
+        if(person == null) {
+            return null;
+        }
+
+        String rejectedMessage = getString(R.string.you_rejected) + " " + person.getName();
+        createSnackbarWithUndo(view, rejectedMessage, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoListener.onUndo(person);
+                peopleToMeet.addFirst(person);
+            }
+        });
         return peopleToMeet.peekFirst();
+    }
+
+    public void createSnackbarWithUndo(View view, String message, View.OnClickListener actionListener) {
+        dismissSnackbar();
+        snackbar = Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_LONG)
+                .setAction(R.string.undo, actionListener);
+        snackbar.show();
+    }
+
+    private void dismissSnackbar() {
+        if(snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
     }
 
     public Person getUserToView() {
@@ -349,5 +396,18 @@ public class MainActivity extends AppCompatActivity
 
         Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
         navController.navigate(R.id.action_meetPeopleFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void onUndoMatch(Person person) {
+        undoListener.onUndo(person);
+        Match match = findMatch(person);
+        mainUser.getMatches().remove(match);
+        peopleToMeet.addFirst(person);
+    }
+
+    @Override
+    public void setOnMeetPeopleActionUndoListener(MeetPeopleFragment.OnMeetPeopleActionUndo listener) {
+        undoListener = listener;
     }
 }

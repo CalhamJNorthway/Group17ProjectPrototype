@@ -95,6 +95,21 @@ public class MatchedDialogFragment extends AppCompatDialogFragment {
                 dismiss();
             }
         });
+
+        button = view.findViewById(R.id.undo);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUndoButtonClick();
+                dismiss();
+            }
+        });
+    }
+
+    public void onUndoButtonClick() {
+        if (listener != null) {
+            listener.onUndoMatch(person);
+        }
     }
 
     public void onMessageButtonClick() {
@@ -132,5 +147,6 @@ public class MatchedDialogFragment extends AppCompatDialogFragment {
      */
     public interface OnFragmentInteractionListener {
         void onMessageNewMatch(Person person);
+        void onUndoMatch(Person person);
     }
 }
