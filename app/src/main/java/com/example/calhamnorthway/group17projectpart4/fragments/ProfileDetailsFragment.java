@@ -3,12 +3,19 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
+import com.example.calhamnorthway.group17projectpart4.data.Person;
+import com.example.calhamnorthway.group17projectpart4.data.Profile;
+import com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ViewPagerAdapter;
 
 
 /**
@@ -20,6 +27,14 @@ import com.example.calhamnorthway.group17projectpart4.R;
 public class ProfileDetailsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private Person potentialMatch;
+    private ViewPager viewPager;
+    private TextView name;
+    private TextView age;
+    private TextView relationShipStatus;
+    private TextView jobTitle;
+    private TextView gender;
+    private TextView description;
 
     public ProfileDetailsFragment() {
         // Required empty public constructor
@@ -30,14 +45,34 @@ public class ProfileDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_details, container, false);
-    }
+        View v = inflater.inflate(R.layout.fragment_profile_details, container, false);
+        
+        setPerson(((MainActivity)getActivity()).getUserToView());
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        this.viewPager = v.findViewById(R.id.profilePicSlider);
+        viewPager.setAdapter(new ViewPagerAdapter(getActivity(), potentialMatch.getProfile().getPictureIds()));
+
+        this.name = v.findViewById(R.id.name);
+        name.setText(potentialMatch.getName());
+
+        this.age = v.findViewById(R.id.age);
+        age.setText(potentialMatch.getAge()+"");
+
+        this.relationShipStatus = v.findViewById(R.id.relationshipStatus);
+        relationShipStatus.setText(potentialMatch.getProfile().getRelationshipStatus().toString());
+
+        this.jobTitle = v.findViewById(R.id.job);
+        jobTitle.setText(potentialMatch.getProfile().getJob());
+
+        this.gender = v.findViewById(R.id.gender);
+        gender.setText(potentialMatch.getGender().toString());
+
+        this.description = v.findViewById(R.id.description);
+        description.setText(potentialMatch.getProfile().getDescription());
+
+        setDetails();
+
+        return v;
     }
 
     @Override
@@ -68,7 +103,28 @@ public class ProfileDetailsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+    }
+
+    public void setDetails() {
+        setPerson(((MainActivity)getActivity()).getUserToView());
+
+        this.viewPager.setAdapter(new ViewPagerAdapter(getActivity(), potentialMatch.getProfile().getPictureIds()));
+
+        this.name.setText(potentialMatch.getName());
+
+        this.age.setText(potentialMatch.getAge()+"");
+
+        this.relationShipStatus.setText(potentialMatch.getProfile().getRelationshipStatus().toString());
+
+        this.jobTitle.setText(potentialMatch.getProfile().getJob());
+
+        this.gender.setText(potentialMatch.getGender().toString());
+
+        this.description.setText(potentialMatch.getProfile().getDescription());
+    }
+
+    private void setPerson(Person potentialMatch){
+        this.potentialMatch = potentialMatch;
     }
 }

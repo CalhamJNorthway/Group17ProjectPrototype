@@ -3,30 +3,23 @@ package com.example.calhamnorthway.group17projectpart4.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.calhamnorthway.group17projectpart4.MainActivity;
 import com.example.calhamnorthway.group17projectpart4.R;
+import com.example.calhamnorthway.group17projectpart4.data.Person;
+import com.example.calhamnorthway.group17projectpart4.data.Profile;
+import com.example.calhamnorthway.group17projectpart4.data.User;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MeetPeopleFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MeetPeopleFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MeetPeopleFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private User loggedInUser;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ProfileDetailsFragment profileDescription;
 
     private OnFragmentInteractionListener mListener;
 
@@ -34,38 +27,50 @@ public class MeetPeopleFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MeetPeopleFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MeetPeopleFragment newInstance(String param1, String param2) {
         MeetPeopleFragment fragment = new MeetPeopleFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meet_people, container, false);
+        View v = inflater.inflate(R.layout.fragment_meet_people, container, false);
+
+        this.profileDescription = new ProfileDetailsFragment();
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentFragment, profileDescription);
+        transaction.commit();
+
+
+        setLoggedInUser(((MainActivity)getActivity()).getMainUser());
+
+        final Button likeButton = v.findViewById(R.id.acceptButton);
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    mListener.onLike();
+                    profileDescription.setDetails();
+            }
+        });
+
+        final Button denyButton = v.findViewById(R.id.acceptButton);
+        denyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDeny();
+                profileDescription.setDetails();
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +110,11 @@ public class MeetPeopleFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onGoToProfile();
+        Person onLike();
+        Person onDeny();
+    }
+
+    private void setLoggedInUser(User loggedInUser){
+        this.loggedInUser = loggedInUser;
     }
 }

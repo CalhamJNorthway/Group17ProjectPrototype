@@ -22,9 +22,9 @@
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment"
         android:label="@string/meet_new_people"
         tools:layout="@layout/fragment_meet_people" >
-        <action
-            android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
-            app:destination="@id/profileDetailsFragment" />
+    <action
+        android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
+        />
     </fragment>
     <fragment
         android:id="@+id/profileDetailsFragment"
