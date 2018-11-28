@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -28,6 +27,7 @@ import com.example.calhamnorthway.group17projectpart4.data.Person;
 import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
 import com.example.calhamnorthway.group17projectpart4.fragments.MatchedDialogFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.ReportUserDialogFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity
         MatchesListFragment.OnMatchesListFragmentInteractionListener,
         MessagingFragment.OnFragmentInteractionListener,
         ImageFragment.OnFragmentInteractionListener,
-        MatchedDialogFragment.OnFragmentInteractionListener {
+        MatchedDialogFragment.OnFragmentInteractionListener,
+        ReportUserDialogFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -66,7 +67,8 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
 
-    private ConversationsListFragment.OnConversationRemovalListener conversationRemovalListener;
+    private MatchesListFragment.OnMatchRemovedListener matchRemovedListener;
+    private ConversationsListFragment.OnConversationRemovedListener conversationRemovedListener;
     private MeetPeopleFragment.OnMeetPeopleActionUndo undoListener;
     private Snackbar snackbar;
 
@@ -235,6 +237,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void setOnMatchRemovedLister(MatchesListFragment.OnMatchRemovedListener listener) {
+        matchRemovedListener = listener;
+    }
+
+    @Override
     public void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -284,6 +291,18 @@ public class MainActivity extends AppCompatActivity
         return null;
     }
 
+    private int findMatchIndex(Person person) {
+        ArrayList<Match> matches = mainUser.getMatches();
+        for (int i = 0; i < matches.size(); i++) {
+            Match c = matches.get(i);
+            if(c.getPerson().equals(person)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public void onGoToProfile(Person person) {
         Match match = findMatch(person);
@@ -309,7 +328,7 @@ public class MainActivity extends AppCompatActivity
 
             FragmentManager fm = getSupportFragmentManager();
             MatchedDialogFragment matchedDialogFragment = MatchedDialogFragment.newInstance(personLiked);
-            matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog);
+            matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog_FullScreen);
             matchedDialogFragment.show(fm, "matched_dialog_fragment");
         } else {
             String likedMessage = getString(R.string.you_liked) + " " + personLiked.getName();
@@ -374,17 +393,40 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onReportUser(Match item) {
-        removeConversation(item.getPerson());
+        FragmentManager fm = getSupportFragmentManager();
+        ReportUserDialogFragment matchedDialogFragment = ReportUserDialogFragment.newInstance(item.getPerson());
+        matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog);
+        matchedDialogFragment.show(fm, "report_dialog_fragment");
+    }
+
+    @Override
+    public void onReported(Person person) {
+        removeMatch(person);
+        removeConversation(person);
+    }
+
+    private void removeMatch(Person person) {
+        Log.d(TAG, "removeMatch() called with: person = [" + person + "]");
+        int matchIndex = findMatchIndex(person);
+        if(matchIndex == -1){
+            return;
+        }
+        mainUser.getMatches().remove(matchIndex);
+        if(matchRemovedListener != null) {
+            matchRemovedListener.onMatchRemoved(matchIndex);
+        }
     }
 
     private void removeConversation(Person person) {
+        Log.d(TAG, "removeConversation() called with: person = [" + person + "]");
         int conversationIndex = findConversationIndex(person);
         if(conversationIndex == -1){
             return;
         }
         mainUser.getConversations().remove(conversationIndex);
-        if(conversationRemovalListener != null) {
-            conversationRemovalListener.onConversationRemoved(conversationIndex);
+        if(conversationRemovedListener != null) {
+            Log.d(TAG, "removeConversation: ");
+            conversationRemovedListener.onConversationRemoved(conversationIndex);
         }
     }
 
@@ -396,8 +438,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void setOnConversationRemovalListener(ConversationsListFragment.OnConversationRemovalListener listener) {
-        conversationRemovalListener = listener;
+    public void setOnConversationRemovalListener(ConversationsListFragment.OnConversationRemovedListener listener) {
+        conversationRemovedListener = listener;
     }
 
     @Override

@@ -98,8 +98,6 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     listener.onUnmatchUser(holder.item);
-
-                    expandedPosition = -1;
                     removeItem(holder.item);
                 }
             }
@@ -131,6 +129,9 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     public void removeItem(Match match) {
         int position = items.indexOf(match);
         items.remove(position);
+        if(expandedPosition == position) {
+            expandedPosition = -1;
+        }
         notifyItemRemoved(position);
     }
 

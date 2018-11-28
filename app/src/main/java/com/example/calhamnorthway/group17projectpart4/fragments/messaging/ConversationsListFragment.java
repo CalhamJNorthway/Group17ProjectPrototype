@@ -57,7 +57,7 @@ public class ConversationsListFragment extends Fragment {
             final RecyclerView.Adapter adapter = new ConversationsAdapter(conversations, listener);
             recyclerView.setAdapter(adapter);
 
-            listener.setOnConversationRemovalListener(new OnConversationRemovalListener() {
+            listener.setOnConversationRemovalListener(new OnConversationRemovedListener() {
                 @Override
                 public void onConversationRemoved(int position) {
                     adapter.notifyItemRemoved(position);
@@ -98,11 +98,11 @@ public class ConversationsListFragment extends Fragment {
      */
     public interface OnConversationListFragmentInteractionListener {
         void onConversationListItemInteraction(Conversation item);
-        void setOnConversationRemovalListener(OnConversationRemovalListener listener);
+        void setOnConversationRemovalListener(OnConversationRemovedListener listener);
         User getMainUser();
     }
 
-    public interface OnConversationRemovalListener {
+    public interface OnConversationRemovedListener {
         void onConversationRemoved(int position);
     }
 }

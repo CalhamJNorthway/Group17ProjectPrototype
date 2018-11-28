@@ -28,4 +28,9 @@
     <string name="undo">Undo</string>
     <string name="report_person">Report Person</string>
     <string name="unmatch_person">Unmatch Person</string>
+    <string name="cancel">Cancel</string>
+    <string name="other">Other</string>
+    <string name="report_text">Is this person misbehaving? Select the closest thing the person is doing to you.\n\nThis will cause you to unmatch the person</string>
+    <string name="inappropriate_behaviour">Inappropriate Behaviour</string>
+    <string name="report_user">Report User</string>
 </resources>
