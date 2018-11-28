@@ -98,6 +98,7 @@ public class MeetPeopleFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.setOnMeetPeopleActionUndoListener(null);
         mListener = null;
     }
 

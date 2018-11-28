@@ -91,6 +91,8 @@ public class MatchesListFragment extends Fragment {
      */
     public interface OnMatchesListFragmentInteractionListener {
         void onMatchListItemInteraction(Match item);
+        void onUnmatchUser(Match item);
+        void onReportUser(Match item);
         User getMainUser();
 
     }

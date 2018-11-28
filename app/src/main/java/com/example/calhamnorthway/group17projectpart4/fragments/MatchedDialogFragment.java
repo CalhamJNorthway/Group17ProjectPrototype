@@ -1,6 +1,5 @@
 package com.example.calhamnorthway.group17projectpart4.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -108,7 +107,7 @@ public class MatchedDialogFragment extends AppCompatDialogFragment {
 
     public void onUndoButtonClick() {
         if (listener != null) {
-            listener.onUndoMatch(person);
+            listener.onUndoNewMatch(person);
         }
     }
 
@@ -147,6 +146,6 @@ public class MatchedDialogFragment extends AppCompatDialogFragment {
      */
     public interface OnFragmentInteractionListener {
         void onMessageNewMatch(Person person);
-        void onUndoMatch(Person person);
+        void onUndoNewMatch(Person person);
     }
 }

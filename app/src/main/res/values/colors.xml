@@ -6,4 +6,5 @@
     <color name="light_black">#96000000</color>
     <color name="black">@android:color/background_dark</color>
     <color name="white">@android:color/background_light</color>
+    <color name="default_background">#FAFAFA</color>
 </resources>

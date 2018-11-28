@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
 
+    private ConversationsListFragment.OnConversationRemovalListener conversationRemovalListener;
     private MeetPeopleFragment.OnMeetPeopleActionUndo undoListener;
     private Snackbar snackbar;
 
@@ -261,6 +262,18 @@ public class MainActivity extends AppCompatActivity
         return null;
     }
 
+    private int findConversationIndex(Person person) {
+        ArrayList<Conversation> conversations = mainUser.getConversations();
+        for (int i = 0; i < conversations.size(); i++) {
+            Conversation c = conversations.get(i);
+            if(c.getPerson().equals(person)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     private Match findMatch(Person person) {
         for (Match m : mainUser.getMatches()) {
             if(m.getPerson().equals(person)){
@@ -355,10 +368,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onUnmatchUser(Match item) {
+        removeConversation(item.getPerson());
+    }
+
+    @Override
+    public void onReportUser(Match item) {
+        removeConversation(item.getPerson());
+    }
+
+    private void removeConversation(Person person) {
+        int conversationIndex = findConversationIndex(person);
+        if(conversationIndex == -1){
+            return;
+        }
+        mainUser.getConversations().remove(conversationIndex);
+        if(conversationRemovalListener != null) {
+            conversationRemovalListener.onConversationRemoved(conversationIndex);
+        }
+    }
+
+    @Override
     public void onConversationListItemInteraction(Conversation item) {
         Log.d(TAG, "onConversationListItemInteraction: Conversation " + item);
         Bundle bundle = MessagingFragment.createArgumentBundle(item);
         navController.navigate(R.id.action_messagingMatchesFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void setOnConversationRemovalListener(ConversationsListFragment.OnConversationRemovalListener listener) {
+        conversationRemovalListener = listener;
     }
 
     @Override
@@ -399,7 +438,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUndoMatch(Person person) {
+    public void onUndoNewMatch(Person person) {
         undoListener.onUndo(person);
         Match match = findMatch(person);
         mainUser.getMatches().remove(match);
