@@ -56,8 +56,14 @@ public class MatchesListFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             ArrayList<Match> matches = listener.getMainUser().getMatches();
-            recyclerView.setAdapter(new MatchesAdapter(matches,listener));
-
+            final MatchesAdapter adapter = new MatchesAdapter(matches,listener);
+            recyclerView.setAdapter(adapter);
+            listener.setOnMatchRemovedLister(new OnMatchRemovedListener() {
+                @Override
+                public void onMatchRemoved(int position) {
+                    adapter.notifyItemRemoved(position);
+                }
+            });
         }
         return view;
     }
@@ -90,8 +96,15 @@ public class MatchesListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnMatchesListFragmentInteractionListener {
-        void onListFragmentInteraction(Match item);
+        void onMatchListItemInteraction(Match item);
+        void onUnmatchUser(Match item);
+        void onReportUser(Match item);
         User getMainUser();
+        void setOnMatchRemovedLister(OnMatchRemovedListener listener);
 
+    }
+
+    public interface OnMatchRemovedListener {
+        void onMatchRemoved(int position);
     }
 }

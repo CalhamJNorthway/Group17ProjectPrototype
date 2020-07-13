@@ -1,11 +1,14 @@
 package com.example.calhamnorthway.group17projectpart4;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,17 +26,21 @@ import com.example.calhamnorthway.group17projectpart4.data.Message;
 import com.example.calhamnorthway.group17projectpart4.data.Person;
 import com.example.calhamnorthway.group17projectpart4.data.Profile;
 import com.example.calhamnorthway.group17projectpart4.data.User;
+import com.example.calhamnorthway.group17projectpart4.fragments.MatchedDialogFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.ReportUserDialogFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MeetPeopleFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.MessagingMatchesFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.matches.MatchesListFragment;
 import com.example.calhamnorthway.group17projectpart4.fragments.messaging.ConversationsListFragment;
+import com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ImageFragment;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
+import java.util.Deque;
 
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -47,7 +54,10 @@ public class MainActivity extends AppCompatActivity
         MessagingMatchesFragment.OnFragmentInteractionListener,
         ConversationsListFragment.OnConversationListFragmentInteractionListener,
         MatchesListFragment.OnMatchesListFragmentInteractionListener,
-        MessagingFragment.OnFragmentInteractionListener {
+        MessagingFragment.OnFragmentInteractionListener,
+        ImageFragment.OnFragmentInteractionListener,
+        MatchedDialogFragment.OnFragmentInteractionListener,
+        ReportUserDialogFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -57,8 +67,12 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private AppBarConfiguration appBarConfiguration;
 
-    private ArrayList<Person> peopleToMeet;
-    private int personIndex = 0;
+    private MatchesListFragment.OnMatchRemovedListener matchRemovedListener;
+    private ConversationsListFragment.OnConversationRemovedListener conversationRemovedListener;
+    private MeetPeopleFragment.OnMeetPeopleActionUndo undoListener;
+    private Snackbar snackbar;
+
+    private Deque<Person> peopleToMeet;
 
     private User mainUser;
 
@@ -136,7 +150,7 @@ public class MainActivity extends AppCompatActivity
         mainUser.setMatches(matches);
 
         //Set up people to meet
-        peopleToMeet = new ArrayList<>();
+        peopleToMeet = new ArrayDeque<>();
         peopleToMeet.add(Person.people.get(1));
         peopleToMeet.add(Person.people.get(2));
         peopleToMeet.add(Person.people.get(4));
@@ -193,6 +207,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        Log.d(TAG, "showActionBar: " + show);
         if(show) {
             actionBar.show();
         } else {
@@ -222,6 +237,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void setOnMatchRemovedLister(MatchesListFragment.OnMatchRemovedListener listener) {
+        matchRemovedListener = listener;
+    }
+
+    @Override
     public void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -239,45 +259,175 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onGoToProfile() {
-        navController.navigate(R.id.action_meetPeopleFragment_to_profileDetailsFragment);
-    }
-
-    public void onGoToProfile(Person person) {
-
-    }
-
-    @Override
-    public Person onLike() {
-        if(peopleToMeet.get(personIndex).isLikesUser()){
-            Match newMatch = new Match(peopleToMeet.get(personIndex), new Date());
-            ArrayList<Match> newMatchList = mainUser.getMatches();
-            newMatchList.add(newMatch);
+    private Conversation findConversation(Person person) {
+        for (Conversation c : mainUser.getConversations()) {
+            if(c.getPerson().equals(person)){
+                return c;
+            }
         }
-        personIndex++;
-        return peopleToMeet.get(personIndex);
+
+        return null;
+    }
+
+    private int findConversationIndex(Person person) {
+        ArrayList<Conversation> conversations = mainUser.getConversations();
+        for (int i = 0; i < conversations.size(); i++) {
+            Conversation c = conversations.get(i);
+            if(c.getPerson().equals(person)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private Match findMatch(Person person) {
+        for (Match m : mainUser.getMatches()) {
+            if(m.getPerson().equals(person)){
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    private int findMatchIndex(Person person) {
+        ArrayList<Match> matches = mainUser.getMatches();
+        for (int i = 0; i < matches.size(); i++) {
+            Match c = matches.get(i);
+            if(c.getPerson().equals(person)){
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
-    public Person onDeny() {
-        personIndex++;
-        return peopleToMeet.get(personIndex);
+    public void onGoToProfile(Person person) {
+        Match match = findMatch(person);
+        if(match == null) {
+            return;
+        }
+        Bundle bundle = ProfileDetailsFragment.createArgumentBundle(match);
+        navController.navigate(R.id.action_conversationFragment_to_profileDetailsFragment, bundle);
+    }
+
+    @Override
+    public Person onLike(View view) {
+        final Person personLiked = peopleToMeet.pollFirst();
+
+        if(personLiked == null) {
+            return null;
+        }
+
+        if(personLiked.likesUser()){
+            Match newMatch = new Match(personLiked, new Date());
+            mainUser.getMatches().add(0, newMatch);
+            dismissSnackbar();
+
+            FragmentManager fm = getSupportFragmentManager();
+            MatchedDialogFragment matchedDialogFragment = MatchedDialogFragment.newInstance(personLiked);
+            matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog_FullScreen);
+            matchedDialogFragment.show(fm, "matched_dialog_fragment");
+        } else {
+            String likedMessage = getString(R.string.you_liked) + " " + personLiked.getName();
+            createSnackbarWithUndo(view, likedMessage, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    undoListener.onUndo(personLiked);
+                    peopleToMeet.addFirst(personLiked);
+                }
+            });
+        }
+
+        return peopleToMeet.peekFirst();
+    }
+
+    @Override
+    public Person onDeny(View view) {
+        final Person person = peopleToMeet.pollFirst();
+
+        if(person == null) {
+            return null;
+        }
+
+        String rejectedMessage = getString(R.string.you_rejected) + " " + person.getName();
+        createSnackbarWithUndo(view, rejectedMessage, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoListener.onUndo(person);
+                peopleToMeet.addFirst(person);
+            }
+        });
+        return peopleToMeet.peekFirst();
+    }
+
+    public void createSnackbarWithUndo(View view, String message, View.OnClickListener actionListener) {
+        dismissSnackbar();
+        snackbar = Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_LONG)
+                .setAction(R.string.undo, actionListener);
+        snackbar.show();
+    }
+
+    private void dismissSnackbar() {
+        if(snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
     }
 
     public Person getUserToView() {
-        return peopleToMeet.get(personIndex);
+        return peopleToMeet.peekFirst();
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onMatchListItemInteraction(Match item) {
+        Bundle bundle = ProfileDetailsFragment.createArgumentBundle(item);
+        navController.navigate(R.id.action_messagingMatchesFragment_to_profileDetailsFragment, bundle);
     }
 
     @Override
-    public void onListFragmentInteraction(Match item) {
+    public void onUnmatchUser(Match item) {
+        removeConversation(item.getPerson());
+    }
 
-        Log.d(TAG,"inListFragmentInteraction: Matches" + item);
+    @Override
+    public void onReportUser(Match item) {
+        FragmentManager fm = getSupportFragmentManager();
+        ReportUserDialogFragment matchedDialogFragment = ReportUserDialogFragment.newInstance(item.getPerson());
+        matchedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Dialog);
+        matchedDialogFragment.show(fm, "report_dialog_fragment");
+    }
+
+    @Override
+    public void onReported(Person person) {
+        removeMatch(person);
+        removeConversation(person);
+    }
+
+    private void removeMatch(Person person) {
+        Log.d(TAG, "removeMatch() called with: person = [" + person + "]");
+        int matchIndex = findMatchIndex(person);
+        if(matchIndex == -1){
+            return;
+        }
+        mainUser.getMatches().remove(matchIndex);
+        if(matchRemovedListener != null) {
+            matchRemovedListener.onMatchRemoved(matchIndex);
+        }
+    }
+
+    private void removeConversation(Person person) {
+        Log.d(TAG, "removeConversation() called with: person = [" + person + "]");
+        int conversationIndex = findConversationIndex(person);
+        if(conversationIndex == -1){
+            return;
+        }
+        mainUser.getConversations().remove(conversationIndex);
+        if(conversationRemovedListener != null) {
+            Log.d(TAG, "removeConversation: ");
+            conversationRemovedListener.onConversationRemoved(conversationIndex);
+        }
     }
 
     @Override
@@ -285,5 +435,60 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onConversationListItemInteraction: Conversation " + item);
         Bundle bundle = MessagingFragment.createArgumentBundle(item);
         navController.navigate(R.id.action_messagingMatchesFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void setOnConversationRemovalListener(ConversationsListFragment.OnConversationRemovedListener listener) {
+        conversationRemovedListener = listener;
+    }
+
+    @Override
+    public void onBack() {
+        navController.popBackStack();
+    }
+
+    @Override
+    public void onEnlarge(int imageId) {
+        Bundle bundle = ImageFragment.createArgumentBundle(imageId, ImageFragment.FULL_VIEW);
+        try {
+            navController.navigate(R.id.action_profileDetailsFragment_to_imageFragment, bundle);
+        } catch (IllegalArgumentException e) {
+            navController.navigate(R.id.action_meetPeopleFragment_to_imageFragment, bundle);
+        }
+    }
+
+    @Override
+    public void onMessagePerson(Person person) {
+        Conversation conversation = findConversation(person);
+        if(conversation == null) {
+            conversation = new Conversation(person);
+        }
+
+        Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
+        navController.navigate(R.id.action_profileDetailsFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void onMessageNewMatch(Person person) {
+        Conversation conversation = findConversation(person);
+        if(conversation == null) {
+            conversation = new Conversation(person);
+        }
+
+        Bundle bundle = MessagingFragment.createArgumentBundle(conversation);
+        navController.navigate(R.id.action_meetPeopleFragment_to_conversationFragment, bundle);
+    }
+
+    @Override
+    public void onUndoNewMatch(Person person) {
+        undoListener.onUndo(person);
+        Match match = findMatch(person);
+        mainUser.getMatches().remove(match);
+        peopleToMeet.addFirst(person);
+    }
+
+    @Override
+    public void setOnMeetPeopleActionUndoListener(MeetPeopleFragment.OnMeetPeopleActionUndo listener) {
+        undoListener = listener;
     }
 }

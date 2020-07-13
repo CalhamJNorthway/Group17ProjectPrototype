@@ -25,15 +25,37 @@
     <action
         android:id="@+id/action_meetPeopleFragment_to_profileDetailsFragment"
         />
+        <action
+            android:id="@+id/action_meetPeopleFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
+        <action
+            android:id="@+id/action_meetPeopleFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileDetailsFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.ProfileDetailsFragment"
-        android:label="fragment_profile_details"
-        tools:layout="@layout/fragment_profile_details" />
+        android:label="@string/blank"
+        tools:layout="@layout/fragment_profile_details" >
+        <action
+            android:id="@+id/action_profileDetailsFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
+        <action
+            android:id="@+id/action_profileDetailsFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/conversationFragment"
         android:name="com.example.calhamnorthway.group17projectpart4.fragments.messaging.MessagingFragment"
-        android:label="fragment_conversation"
-        tools:layout="@layout/fragment_conversation" />
+        android:label="@string/blank"
+        tools:layout="@layout/fragment_conversation" >
+        <action
+            android:id="@+id/action_conversationFragment_to_profileDetailsFragment"
+            app:destination="@id/profileDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.example.calhamnorthway.group17projectpart4.fragments.profileDetails.ImageFragment"
+        android:label="@string/blank"
+        tools:layout="@layout/fragment_image" />
 </navigation>

@@ -54,7 +54,15 @@ public class ConversationsListFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             ArrayList<Conversation> conversations = listener.getMainUser().getConversations();
-            recyclerView.setAdapter(new ConversationsAdapter(conversations, listener));
+            final RecyclerView.Adapter adapter = new ConversationsAdapter(conversations, listener);
+            recyclerView.setAdapter(adapter);
+
+            listener.setOnConversationRemovalListener(new OnConversationRemovedListener() {
+                @Override
+                public void onConversationRemoved(int position) {
+                    adapter.notifyItemRemoved(position);
+                }
+            });
         }
         return view;
     }
@@ -74,6 +82,7 @@ public class ConversationsListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        listener.setOnConversationRemovalListener(null);
         listener = null;
     }
 
@@ -89,6 +98,11 @@ public class ConversationsListFragment extends Fragment {
      */
     public interface OnConversationListFragmentInteractionListener {
         void onConversationListItemInteraction(Conversation item);
+        void setOnConversationRemovalListener(OnConversationRemovedListener listener);
         User getMainUser();
+    }
+
+    public interface OnConversationRemovedListener {
+        void onConversationRemoved(int position);
     }
 }

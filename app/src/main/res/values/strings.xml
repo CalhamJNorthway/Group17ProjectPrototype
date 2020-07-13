@@ -2,15 +2,13 @@
     <string name="app_name">Group17ProjectPart4</string>
     <string name="meet_new_people">Meet New People</string>
     <string name="messages_and_matches">Messages and Matches</string>
+    <string name="blank"> </string>
 
     <string name="tab_label_matches">Matches</string>
     <string name="tab_label_messaging">Messages</string>
-    <string name="Messages_hint">Type a message...</string>
-<string name="match_name">Your match: </string>
+    <string name="Messages_hint">Type a message&#8230;</string>
+    <string name="match_name">Your match: </string>
     <string name="matchDate">Date Matched: </string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     <string name="jobTitleText">"Job Title: "</string>
@@ -18,4 +16,21 @@
 
     <string name="denyButton">"-"</string>
     <string name="acceptButton">"+"</string>
+
+    <string name="no_more_people_warning">No More New People To Meet\nTry Again Later</string>
+
+    <string name="its_a_match">It\'s a Match!</string>
+    <string name="send_a_message">Send a Message</string>
+    <string name="keep_looking">Keep Looking</string>
+
+    <string name="you_liked">You Liked</string>
+    <string name="you_rejected">You Declined</string>
+    <string name="undo">Undo</string>
+    <string name="report_person">Report Person</string>
+    <string name="unmatch_person">Unmatch Person</string>
+    <string name="cancel">Cancel</string>
+    <string name="other">Other</string>
+    <string name="report_text">Is this person misbehaving? Select the closest thing the person is doing to you.\n\nThis will cause you to unmatch the person</string>
+    <string name="inappropriate_behaviour">Inappropriate Behaviour</string>
+    <string name="report_user">Report User</string>
 </resources>
